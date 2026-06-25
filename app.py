@@ -3,7 +3,10 @@ from flask import Flask, render_template, request, flash
 from flask_login import LoginManager
 from datetime import datetime
 from models import User
-from dao import users_dao, tours_dao
+
+# Doğrudan fonksiyon bazlı import yapısı
+from dao.users_dao import get_user_by_id
+from dao.tours_dao import search_tours
 
 from routes.auth_routes import auth_bp
 from routes.guide_routes import guide_bp
@@ -18,7 +21,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    db_user = users_dao.get_user_by_id(user_id)
+    db_user = get_user_by_id(user_id)
     if db_user:
         return User(
             id=db_user["id"], name=db_user["name"], surname=db_user["surname"],
@@ -43,7 +46,7 @@ def home():
         except ValueError:
             flash("Invalid date format.", "danger")
             
-    tours = tours_dao.search_tours(day_name, duration, lang)
+    tours = search_tours(day_name, duration, lang)
     return render_template("index.html", tours=tours)
 
 if __name__ == "__main__":

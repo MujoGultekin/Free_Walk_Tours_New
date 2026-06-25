@@ -4,7 +4,14 @@ from flask_login import login_user, logout_user, login_required, current_user
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import User
-from dao import users_dao
+
+# Doğrudan fonksiyonları import ediyoruz (Çakışmaları önlemek için kesin çözüm)
+from dao.users_dao import get_user_by_email, get_user_by_id, get_all_guides_with_tours, get_platform_statistics
+from dao.users_dao import new_user
+
+import dao.users_dao as users_dao
+
+print(dir(users_dao))
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -41,7 +48,7 @@ def login():
         email = request.form.get("txt_email").strip()
         password = request.form.get("txt_password")
         
-        db_user = users_dao.get_user_by_email(email)
+        db_user = get_user_by_email(email)
         if db_user and check_password_hash(db_user["password"], password):
             user_obj = User(
                 id=db_user["id"], name=db_user["name"], surname=db_user["surname"],
@@ -74,7 +81,7 @@ def register_participant():
         password = request.form.get("txt_password")
         
         hashed_password = generate_password_hash(password)
-        if users_dao.new_user(name, surname, email, hashed_password, 'participant'):
+        if new_user(name, surname, email, hashed_password, 'participant'):
             flash("Registration successful!", "success")
             return redirect(url_for("auth.login"))
         flash("Email already exists.", "danger")
@@ -90,7 +97,7 @@ def register_guide():
         langs = ",".join(request.form.getlist("chk_languages"))
         
         hashed_password = generate_password_hash(password)
-        if users_dao.new_user(name, surname, email, hashed_password, 'guide', langs):
+        if new_user(name, surname, email, hashed_password, 'guide', langs):
             flash("Guide registration successful!", "success")
             return redirect(url_for("auth.login"))
         flash("Email already exists.", "danger")
@@ -106,14 +113,14 @@ def profile_guide():
 @login_required
 @participant_required
 def profile_participant():
-    from dao import reservations_dao
-    my_bookings = reservations_dao.get_participant_reservations(current_user.id)
+    from dao.reservations_dao import get_participant_reservations
+    my_bookings = get_participant_reservations(current_user.id)
     return render_template("profile_participant.html", bookings=my_bookings)
 
 @auth_bp.route("/admin/profile")
 @login_required
 @admin_required
 def profile_admin():
-    guides_data = users_dao.get_all_guides_with_tours()
-    stats_data = users_dao.get_platform_statistics()
+    guides_data = get_all_guides_with_tours()
+    stats_data = get_platform_statistics()
     return render_template("profile_admin.html", guides=guides_data, stats=stats_data)
