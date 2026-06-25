@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Register as Participant{% endblock %}
+
+{% block content %}
+<div class="col-12 d-flex justify-content-center align-items-center py-4">
+  <div class="card shadow border p-4" style="width: 100%; max-width: 480px;">
+    <div class="text-center mb-4">
+      <i class="bi bi-person-plus-fill text-success display-4"></i>
+      <h3 class="fw-bold mt-2">Participant Registration</h3>
+      <p class="text-muted small">Create a free account to discover and book tours</p>
+    </div>
+    
+    <form action="{{ url_for('auth.register_participant') }}" method="POST">
+      <div class="row g-2 mb-3">
+        <div class="col-md-6">
+          <label for="txt_name" class="form-label small fw-bold">First Name</label>
+          <input type="text" class="form-control" name="txt_name" id="txt_name" placeholder="John" required>
+        </div>
+        <div class="col-md-6">
+          <label for="txt_surname" class="form-label small fw-bold">Last Name</label>
+          <input type="text" class="form-control" name="txt_surname" id="txt_surname" placeholder="Doe" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="txt_email" class="form-label small fw-bold">Email Address</label>
+        <input type="email" class="form-control" name="txt_email" id="txt_email" placeholder="john.doe@example.com" required>
+      </div>
+      
+      <div class="mb-4">
+        <label for="txt_password" class="form-label small fw-bold">Password</label>
+        <input type="password" class="form-control" name="txt_password" id="txt_password" placeholder="Create a strong password" required>
+      </div>
+      
+      <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">Create Account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

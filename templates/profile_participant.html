@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="col-12">
+  <div class="mb-4 border-bottom pb-3">
+    <h2>My Scheduled Tours</h2>
+    <p class="text-muted mb-0">Review your personal reservations and tour booking summary</p>
+  </div>
+
+  <div class="card shadow-sm border">
+    <div class="card-header bg-dark text-white fw-bold">Booked Reservations</div>
+    <div class="card-body py-4 text-center text-muted">
+       <i class="bi bi-calendar-check fs-2 mb-2 d-block text-secondary"></i>
+       <p class="mb-0 small">You have no active tour reservations. Go to the home page to explore historical walks!</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

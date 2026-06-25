@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="col-12">
+  <h2 class="mb-4">Platform Administration Dashboard</h2>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white shadow-sm text-center py-3">
+        <h3>{{ stats.total_guides }}</h3>
+        <p class="mb-0">Total Guides</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white shadow-sm text-center py-3">
+        <h3>{{ stats.total_participants }}</h3>
+        <p class="mb-0">Total Participants</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white shadow-sm text-center py-3">
+        <h3>{{ stats.total_tours }}</h3>
+        <p class="mb-0">Total Tours</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-dark shadow-sm text-center py-3">
+        <h3>{{ stats.total_reservations }}</h3>
+        <p class="mb-0">Total Reservations</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">Reservations per Language</div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for row in stats.reservations_per_language %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ row.language }}
+              <span class="badge bg-secondary rounded-pill">{{ row.res_count }}</span>
+            </li>
+            {% else %}
+            <li class="list-group-item text-muted">No reservations yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">Registered Guides & Their Tours</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Guide Name</th>
+                  <th>Email</th>
+                  <th>Languages</th>
+                  <th>Created Tours</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in guides %}
+                <tr>
+                  <td><strong>{{ item.info.name }} {{ item.info.surname }}</strong></td>
+                  <td>{{ item.info.email }}</td>
+                  <td><span class="text-muted small">{{ item.info.languages }}</span></td>
+                  <td>
+                    {% if item.tours %}
+                      <ul class="mb-0 ps-3">
+                        {% for tour in item.tours %}
+                        <li>{{ tour.title }} <small class="text-primary">({{ tour.language }})</small></li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <span class="text-danger small">No tours created.</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

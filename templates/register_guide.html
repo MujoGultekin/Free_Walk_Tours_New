@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Register as Guide{% endblock %}
+
+{% block content %}
+<div class="col-12 d-flex justify-content-center align-items-center py-4">
+  <div class="card shadow border p-4" style="width: 100%; max-width: 520px;">
+    <div class="text-center mb-4">
+      <i class="bi bi-person-badge-fill text-primary display-4"></i>
+      <h3 class="fw-bold mt-2">Tour Guide Registration</h3>
+      <p class="text-muted small">Join our community to publish your architectural and historical walks</p>
+    </div>
+    
+    <form action="{{ url_for('auth.register_guide') }}" method="POST">
+      <div class="row g-2 mb-3">
+        <div class="col-md-6">
+          <label for="txt_name" class="form-label small fw-bold">First Name</label>
+          <input type="text" class="form-control" name="txt_name" id="txt_name" required>
+        </div>
+        <div class="col-md-6">
+          <label for="txt_surname" class="form-label small fw-bold">Last Name</label>
+          <input type="text" class="form-control" name="txt_surname" id="txt_surname" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="txt_email" class="form-label small fw-bold">Email Address</label>
+        <input type="email" class="form-control" name="txt_email" id="txt_email" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="txt_password" class="form-label small fw-bold">Password</label>
+        <input type="password" class="form-control" name="txt_password" id="txt_password" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label small fw-bold d-block">Spoken Languages (Select all that apply)</label>
+        <div class="row g-2 border rounded p-3 bg-light">
+          <div class="col-6">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="chk_languages" value="English" id="lang_en">
+              <label class="form-check-label small" for="lang_en">English</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="chk_languages" value="Italian" id="lang_it">
+              <label class="form-check-label small" for="lang_it">Italian</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="chk_languages" value="Spanish" id="lang_es">
+              <label class="form-check-label small" for="lang_es">Spanish</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="chk_languages" value="German" id="lang_de">
+              <label class="form-check-label small" for="lang_de">German</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Submit Guide Application</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
