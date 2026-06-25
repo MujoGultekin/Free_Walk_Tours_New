@@ -20,3 +20,33 @@ def cancel_reservation(p_res_id):
     conn.commit()
     cursor.close()
     conn.close()
+
+# dao/reservations_dao.py dosyasına eklenecek fonksiyon:
+
+def get_participant_reservations(p_part_id):
+    """Katılımcının yaptığı tüm rezervasyonları tur bilgileriyle birlikte getirir."""
+    query = """
+        SELECT r.id as res_id, r.tour_date, r.additional_count, t.title, t.meeting_point 
+        FROM reservations r
+        JOIN tours t ON r.tour_id = t.id
+        WHERE r.participant_id = ?
+    """
+    import sqlite3
+    conn = sqlite3.connect("roma_tours.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute(query, (p_part_id,))
+    res = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return res
+
+def new_reservation(p_tour_id, p_part_id, p_date, p_add_count, p_add_names):
+    query = "INSERT INTO reservations (tour_id, participant_id, tour_date, additional_count, additional_names) VALUES (?,?,?,?,?)"
+    import sqlite3
+    conn = sqlite3.connect("roma_tours.db")
+    cursor = conn.cursor()
+    cursor.execute(query, (p_tour_id, p_part_id, p_date, p_add_count, p_add_names))
+    conn.commit()
+    cursor.close()
+    conn.close()

@@ -63,7 +63,7 @@
             <div><strong><i class="bi bi-people-fill text-warning me-1"></i> Max Capacity:</strong> {{ tour.max_participants }} people</div>
           </div>
           
-          <a href="#" class="btn btn-dark btn-sm mt-auto w-100">View Tour Details & Book</a>
+          <a href="{{ url_for('participant.tour_detail', tour_id=tour.id) }}" class="btn btn-dark btn-sm mt-auto w-100">View Tour Details & Book</a>
         </div>
       </div>
     </div>

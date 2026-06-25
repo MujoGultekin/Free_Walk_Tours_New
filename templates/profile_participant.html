@@ -5,15 +5,48 @@
 {% block content %}
 <div class="col-12">
   <div class="mb-4 border-bottom pb-3">
-    <h2>My Scheduled Tours</h2>
-    <p class="text-muted mb-0">Review your personal reservations and tour booking summary</p>
+    <h2>Welcome, {{ current_user.name }}!</h2>
+    <p class="text-muted mb-0">Review and manage your active walking tour bookings in Rome</p>
   </div>
 
   <div class="card shadow-sm border">
-    <div class="card-header bg-dark text-white fw-bold">Booked Reservations</div>
-    <div class="card-body py-4 text-center text-muted">
-       <i class="bi bi-calendar-check fs-2 mb-2 d-block text-secondary"></i>
-       <p class="mb-0 small">You have no active tour reservations. Go to the home page to explore historical walks!</p>
+    <div class="card-header bg-dark text-white fw-bold">My Booked Reservations</div>
+    <div class="card-body">
+      {% if bookings %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Tour Title</th>
+              <th>Date</th>
+              <th>Meeting Point</th>
+              <th>Extra Guests</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in bookings %}
+            <tr>
+              <td><strong>{{ b.title }}</strong></td>
+              <td><span class="badge bg-secondary">{{ b.tour_date }}</span></td>
+              <td>{{ b.meeting_point }}</td>
+              <td>+{{ b.additional_count }} people</td>
+              <td>
+                <form action="{{ url_for('participant.cancel_booking', res_id=b.res_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                  <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Cancel</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="py-4 text-center text-muted">
+         <i class="bi bi-calendar-check fs-2 mb-2 d-block text-secondary"></i>
+         <p class="mb-0 small">You have no active tour reservations. Go to the home page to explore historical walks!</p>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

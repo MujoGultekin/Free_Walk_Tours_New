@@ -106,7 +106,9 @@ def profile_guide():
 @login_required
 @participant_required
 def profile_participant():
-    return render_template("profile_participant.html")
+    from dao import reservations_dao
+    my_bookings = reservations_dao.get_participant_reservations(current_user.id)
+    return render_template("profile_participant.html", bookings=my_bookings)
 
 @auth_bp.route("/admin/profile")
 @login_required
