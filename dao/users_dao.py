@@ -76,14 +76,15 @@ def get_platform_statistics():
     cursor.execute("SELECT COUNT(*) as count FROM reservations")
     stats["total_reservations"] = cursor.fetchone()["count"]
     
+    # Yeni eklenen: Dil bazlı rezervasyon istatistiği
     query_lang = """
         SELECT t.language, COUNT(r.id) as res_count 
         FROM reservations r
-        JOIN tours t ON r.tour_id = t.id
+        JOIN tours t ON r.tour_id = t.id 
         GROUP BY t.language
     """
     cursor.execute(query_lang)
-    stats["reservations_per_language"] = cursor.fetchall()
+    stats["lang_stats"] = cursor.fetchall()
     
     cursor.close()
     conn.close()

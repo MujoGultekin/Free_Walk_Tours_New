@@ -121,6 +121,7 @@ def profile_participant():
 @login_required
 @admin_required
 def profile_admin():
-    guides_data = get_all_guides_with_tours()
-    stats_data = get_platform_statistics()
-    return render_template("profile_admin.html", guides=guides_data, stats=stats_data)
+    from dao.users_dao import get_platform_statistics, get_all_guides_with_tours
+    stats = get_platform_statistics() # Artık içinde lang_stats var
+    guides = get_all_guides_with_tours()
+    return render_template("profile_admin.html", stats=stats, guides=guides)

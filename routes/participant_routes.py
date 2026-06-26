@@ -18,17 +18,23 @@ def tour_detail(tour_id):
 @login_required
 @participant_required
 def book_tour(tour_id):
-    tour_date = request.form.get("txt_date")
+    tour = tours_dao.get_tour_by_id(tour_id)
     add_count = int(request.form.get("txt_count", 0))
-    add_names = request.form.get("txt_names", "").strip()
     
-    # Sınav kuralı: Ekstra kişi sayısı 0 ile 3 arasında olmalıdır.
+    # 1. Kural: Toplam kişi kontrolü
+    current_booked = reservations_dao.get_total_booked_count(tour_id)
+    if (current_booked + 1 + add_count) > tour['max_participants']:
+        flash(f"This tour is full! (Max {tour['max_participants']} people).", "danger")
+        return redirect(url_for("participant.tour_detail", tour_id=tour_id))
+
+    # 2. Kural: Ekstra kişi sayısı (3 ile sınırlandırmıştık)
     if add_count < 0 or add_count > 3:
         flash("You can add a maximum of 3 extra guests.", "danger")
         return redirect(url_for("participant.tour_detail", tour_id=tour_id))
 
-    reservations_dao.new_reservation(tour_id, current_user.id, tour_date, add_count, add_names)
-    flash("Your booking has been successfully saved!", "success")
+    # Kaydetme işlemi...
+    reservations_dao.new_reservation(tour_id, current_user.id, request.form.get("txt_date"), add_count, request.form.get("txt_names", ""))
+    flash("Booking successful!", "success")
     return redirect(url_for("auth.profile_participant"))
 
 @participant_bp.route("/reservation/cancel/<int:res_id>", methods=["POST"])

@@ -50,3 +50,13 @@ def new_reservation(p_tour_id, p_part_id, p_date, p_add_count, p_add_names):
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_total_booked_count(p_tour_id):
+    query = "SELECT SUM(1 + additional_count) as total FROM reservations WHERE tour_id = ?"
+    conn = sqlite3.connect("roma_tours.db")
+    cursor = conn.cursor()
+    cursor.execute(query, (p_tour_id,))
+    res = cursor.fetchone()
+    total = res[0] if res[0] else 0
+    conn.close()
+    return total
