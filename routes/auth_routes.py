@@ -107,7 +107,10 @@ def register_guide():
 @login_required
 @guide_required
 def profile_guide():
-    return render_template("profile_guide.html")
+    # tours_dao içindeki fonksiyonu kullanarak turları çekiyoruz
+    from dao.tours_dao import get_tours_by_guide_id
+    my_tours = get_tours_by_guide_id(current_user.id)
+    return render_template("profile_guide.html", tours=my_tours)
 
 @auth_bp.route("/participant/profile")
 @login_required

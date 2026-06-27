@@ -1,14 +1,21 @@
-# init_db.py
 import sqlite3
 from werkzeug.security import generate_password_hash
+from datetime import datetime, timedelta
 
 def initialize_database():
     conn = sqlite3.connect("roma_tours.db")
     cursor = conn.cursor()
 
+    # Eski tabloları temizle
+    cursor.execute('DROP TABLE IF EXISTS tour_reports;')
+    cursor.execute('DROP TABLE IF EXISTS reservations;')
+    cursor.execute('DROP TABLE IF EXISTS tour_schedule;')
+    cursor.execute('DROP TABLE IF EXISTS tours;')
+    cursor.execute('DROP TABLE IF EXISTS users;')
+
     # 1. TABLOLARI OLUŞTURMA
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             surname TEXT NOT NULL,
@@ -20,7 +27,7 @@ def initialize_database():
     ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS tours (
+        CREATE TABLE tours (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             guide_id INTEGER NOT NULL,
             title TEXT NOT NULL,
@@ -36,18 +43,17 @@ def initialize_database():
     ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS tour_schedule (
+        CREATE TABLE tour_schedule (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tour_id INTEGER NOT NULL,
             day_of_week TEXT CHECK(day_of_week IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')) NOT NULL,
             start_time TEXT NOT NULL,
-            FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
-            UNIQUE(tour_id, day_of_week)
+            FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
         );
     ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS reservations (
+        CREATE TABLE reservations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tour_id INTEGER NOT NULL,
             participant_id INTEGER NOT NULL,
@@ -60,7 +66,7 @@ def initialize_database():
     ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS tour_reports (
+        CREATE TABLE tour_reports (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tour_id INTEGER NOT NULL,
             tour_date TEXT NOT NULL,
@@ -70,52 +76,43 @@ def initialize_database():
         );
     ''')
 
-    # Temizlik (Çift kayıtları önlemek için)
-    cursor.execute("DELETE FROM tour_schedule;")
-    cursor.execute("DELETE FROM tours;")
-    cursor.execute("DELETE FROM users;")
-    
-    # 2. ÖRNEK TEST VERİLERİ (SEED DATA)
-    # Tüm test hesaplarının şifresi: 'password123'
+    # Ortak Şifre: 'password123'
     hashed_pwd = generate_password_hash("password123")
 
-    # Hazır Kullanıcılar (Rehber, Katılımcı ve Admin)
-    cursor.execute("""
-        INSERT INTO users (id, name, surname, email, password, role, languages)
-        VALUES (1, 'Marco', 'Rossi', 'marco@guide.com', ?, 'guide', 'English,Italian,Spanish')
-    """, (hashed_pwd,))
+    # 2. KULLANICILAR (2 Rehber, 3 Katılımcı, 1 Admin)
+    # Rehberler
+    cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (1, 'Marco', 'Rossi', 'marco@guide.com', ?, 'guide', 'English,Italian')", (hashed_pwd,))
+    cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (4, 'Giulia', 'Verdi', 'giulia@guide.com', ?, 'guide', 'Spanish,German')", (hashed_pwd,))
 
-    cursor.execute("""
-        INSERT INTO users (id, name, surname, email, password, role, languages)
-        VALUES (2, 'John', 'Doe', 'john@part.com', ?, 'participant', NULL)
-    """, (hashed_pwd,))
+    # Katılımcılar
+    cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (2, 'John', 'Doe', 'john@part.com', ?, 'participant', NULL)", (hashed_pwd,))
+    cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (5, 'Maria', 'Bianchi', 'maria@part.com', ?, 'participant', NULL)", (hashed_pwd,))
+    cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (6, 'Luca', 'Neri', 'luca@part.com', ?, 'participant', NULL)", (hashed_pwd,))
 
-    cursor.execute("""
-        INSERT INTO users (id, name, surname, email, password, role, languages)
-        VALUES (3, 'Alessandro', 'Admin', 'admin@roma.com', ?, 'administrator', NULL)
-    """, (hashed_pwd,))
+    # Admin
+    cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (3, 'Alessandro', 'Admin', 'admin@roma.com', ?, 'administrator', NULL)", (hashed_pwd,))
 
-    # Hazır Roma Turları
-    cursor.execute("""
-        INSERT INTO tours (id, guide_id, title, meeting_point, duration, language, max_participants, description, stops, photos)
-        VALUES (1, 1, 'Imperial Rome & Colosseum Walk', 'Colosseum Metro Exit', 120, 'English', 15, 
-                'Discover the history of the Roman Empire.', 'Colosseum,Roman Forum,Capitoline Hill', 'colosseum.jpg')
-    """)
+    # 3. TURLAR (Tam 5 Adet Farklı Süre, Dil ve İçerik)
+    cursor.execute("INSERT INTO tours VALUES (1, 1, 'Colosseum & Ancient Rome Walk', 'Colosseum Metro Exit', 120, 'English', 15, 'Discover the history of the Roman Empire.', 'Colosseum,Roman Forum', 'colosseum.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 'Explore the magnificent St. Peters Basilica.', 'St. Peters Square,Basilica', 'vatican.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (3, 4, 'Trastevere Evening Food Tour', 'Piazza Trilussa', 150, 'Spanish', 12, 'Taste authentic Roman street food and local legends.', 'Trastevere,Bakery,Gelateria', 'trastevere.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (4, 1, 'Pantheon & Hidden Gems', 'Piazza della Rotonda', 90, 'English', 20, 'Uncover the secrets of ancient temples and squares.', 'Pantheon,Trevi Fountain,Navona', 'pantheon.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (5, 4, 'Roman Catacombs Underground', 'Piazza Venezia Bus Stop', 240, 'German', 8, 'Descend into the underground early Christian burial chambers.', 'Appian Way,Catacombs of San Callisto', 'catacombs.jpg')")
 
-    cursor.execute("""
-        INSERT INTO tours (id, guide_id, title, meeting_point, duration, language, max_participants, description, stops, photos)
-        VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 
-                'Explore the magnificent St. Peters Basilica.', 'St. Peters Square,Via della Conciliazione', 'vatican.jpg')
-    """)
-
-    # Haftalık Takvim Günleri
+    # 4. HAFTALIK TAKVİM (Programlar)
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (1, 'Monday', '10:00')")
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (2, 'Wednesday', '14:00')")
+    cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (3, 'Friday', '18:30')")
+    cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (4, 'Tuesday', '11:00')")
+    cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (5, 'Saturday', '09:00')")
+
+    # 5. GEÇMİŞ TARİHLİ REZERVASYON (Post-Tour Rapor Testi İçin)
+    past_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+    cursor.execute("INSERT INTO reservations (tour_id, participant_id, tour_date, additional_count, additional_names) VALUES (1, 2, ?, 1, 'Jane Doe')", (past_date,))
 
     conn.commit()
-    cursor.close()
     conn.close()
-    print("roma_tours.db başarıyla oluşturuldu ve test verileri yüklendi!")
+    print("Mükemmel! Veritabanı 5 tur ve sınav gereksinimleriyle başarıyla oluşturuldu.")
 
 if __name__ == "__main__":
     initialize_database()

@@ -56,3 +56,14 @@ def get_tour_by_id(p_tour_id):
     cursor.close()
     conn.close()
     return tour
+
+def get_tours_by_guide_id(p_guide_id):
+    query = "SELECT * FROM tours WHERE guide_id = ?"
+    conn = sqlite3.connect("roma_tours.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute(query, (p_guide_id,))
+    tours = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tours
