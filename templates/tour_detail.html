@@ -32,8 +32,8 @@
       </div>
 
       <div class="mb-3">
-        <label for="txt_count" class="form-label small fw-bold">Additional Guests (Max 3)</label>
-        <select class="form-select" name="txt_count" id="txt_count">
+        <label for="txt_count" class="form-label small fw-bold">Additional Guests</label>
+        <select class="form-select" name="txt_count" id="txt_count" onchange="generateInputs()">
           <option value="0">Just Me (0 extra)</option>
           <option value="1">+1 Guest</option>
           <option value="2">+2 Guests</option>
@@ -41,10 +41,7 @@
         </select>
       </div>
 
-      <div class="mb-4">
-        <label for="txt_names" class="form-label small fw-bold">Guest Names (Comma separated)</label>
-        <input type="text" class="form-control" name="txt_names" id="txt_names" placeholder="e.g. Jane Doe, Bob Smith">
-      </div>
+      <div id="nameInputs" class="mb-3"></div>
 
       <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">Confirm Booking</button>
     </form>
@@ -56,4 +53,15 @@
     {% endif %}
   </div>
 </div>
+
+<script>
+function generateInputs() {
+    let count = document.getElementById("txt_count").value;
+    let container = document.getElementById("nameInputs");
+    container.innerHTML = ""; 
+    for (let i = 1; i <= count; i++) {
+        container.innerHTML += `<input type="text" name="guest_names" placeholder="Guest ${i} Name" required class="form-control mb-2">`;
+    }
+}
+</script>
 {% endblock %}
