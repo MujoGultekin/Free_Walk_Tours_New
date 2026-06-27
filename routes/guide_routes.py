@@ -72,3 +72,16 @@ def submit_report(tour_id):
     
     flash("Report submitted successfully!", "success")
     return redirect(url_for("auth.profile_guide"))
+
+@guide_bp.route("/guide/tour/delete/<int:tour_id>", methods=["POST"])
+@login_required
+@guide_required
+def delete_tour(tour_id):
+    # Silmeden önce yine rezervasyon kontrolü yapalım
+    if tours_dao.has_reservations(tour_id):
+        flash("This tour has active reservations and cannot be deleted!", "danger")
+        return redirect(url_for("auth.profile_guide"))
+    
+    tours_dao.delete_tour(tour_id)
+    flash("Tour deleted successfully!", "success")
+    return redirect(url_for("auth.profile_guide"))

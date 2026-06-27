@@ -84,3 +84,13 @@ def update_tour(p_tour_id, p_title, p_meeting_point, p_duration, p_language, p_m
     cursor.close()
     conn.close()
 
+def delete_tour(p_tour_id):
+    conn = sqlite3.connect("roma_tours.db")
+    cursor = conn.cursor()
+    # Önce turu siliyoruz
+    cursor.execute("DELETE FROM tours WHERE id = ?", (p_tour_id,))
+    # İsterseniz ilgili schedule kayıtlarını da temizleyebilirsiniz:
+    cursor.execute("DELETE FROM tour_schedule WHERE tour_id = ?", (p_tour_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()

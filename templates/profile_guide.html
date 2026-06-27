@@ -23,7 +23,15 @@
                  <h6 class="mb-0 fw-bold">{{ tour.title }}</h6>
                  <small class="text-muted">{{ tour.language }} | {{ tour.duration }} mins</small>
                </div>
-               <a href="{{ url_for('guide.edit_tour', tour_id=tour.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+               <!-- Butonları aynı grupta tutmak için d-flex kullandık -->
+               <div class="d-flex gap-2">
+                 <a href="{{ url_for('guide.edit_tour', tour_id=tour.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                 
+                 <!-- Silme Butonu (Form ile) -->
+                 <form action="{{ url_for('guide.delete_tour', tour_id=tour.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this tour?')">Delete</button>
+                 </form>
+               </div>
              </div>
            {% endfor %}
          </div>
