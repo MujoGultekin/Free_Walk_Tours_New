@@ -32,3 +32,11 @@ footer {
     color: #495057;
     font-weight: 500;
 }
+
+.hero-section {
+    height: 80vh;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/roma.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

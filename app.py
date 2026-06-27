@@ -33,6 +33,10 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(guide_bp)
 app.register_blueprint(participant_bp)
 
+@app.route("/roma-tours")
+def roma_tours():
+    return render_template("roma_tours.html")
+
 @app.route("/")
 def home():
     lang = request.args.get("language")
