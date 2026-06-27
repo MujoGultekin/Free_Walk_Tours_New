@@ -72,3 +72,15 @@ def get_tours_by_guide_id(p_guide_id):
     cursor.close()
     conn.close()
     return tours
+
+def update_tour(p_tour_id, p_title, p_meeting_point, p_duration, p_language, p_max_participants, p_description, p_stops, p_photos):
+    query = """UPDATE tours SET title=?, meeting_point=?, duration=?, language=?, 
+               max_participants=?, description=?, stops=?, photos=? WHERE id=?"""
+    conn = sqlite3.connect("roma_tours.db")
+    cursor = conn.cursor()
+    cursor.execute(query, (p_title, p_meeting_point, p_duration, p_language, 
+                           p_max_participants, p_description, p_stops, p_photos, p_tour_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+

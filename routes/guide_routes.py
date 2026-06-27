@@ -36,22 +36,28 @@ def new_tour():
 @login_required
 @guide_required
 def edit_tour(tour_id):
-    # 1. Rezervasyon kontrolü
     if tours_dao.has_reservations(tour_id):
         flash("This tour has active reservations and cannot be modified!", "danger")
         return redirect(url_for("auth.profile_guide"))
     
-    # 2. Veritabanından tur bilgilerini çek
-    tour = tours_dao.get_tour_by_id(tour_id)
-    
-    # 3. POST isteği gelirse güncelleme yap (Basit bir güncelleme fonksiyonu eklemen gerekecek)
+    # EĞER POST İSTEĞİ GELİRSE GÜNCELLE
     if request.method == "POST":
-        # Burada tours_dao içine bir update_tour fonksiyonu ekleyip çağırman gerekecek
-        # Örnek: tours_dao.update_tour(tour_id, ...)
+        tours_dao.update_tour(
+            tour_id,
+            request.form.get("title"),
+            request.form.get("meeting_point"),
+            request.form.get("duration"),
+            request.form.get("language"),
+            request.form.get("max_participants"),
+            request.form.get("description"),
+            request.form.get("stops"),
+            request.form.get("photos")
+        )
         flash("Tour updated successfully!", "success")
         return redirect(url_for("auth.profile_guide"))
-
-    # 4. 'tour' nesnesini şablona gönder
+    
+    # EĞER GET İSTEĞİ GELİRSE SAYFAYI GÖSTER (Sadece burası çalışmalı)
+    tour = tours_dao.get_tour_by_id(tour_id)
     return render_template("edit_tour.html", tour=tour)
 
 @guide_bp.route("/guide/tour/report/<int:tour_id>", methods=["POST"])

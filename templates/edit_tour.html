@@ -15,6 +15,14 @@
                 <label>Meeting Point</label>
                 <input type="text" name="meeting_point" class="form-control" value="{{ tour.meeting_point }}" required>
             </div>
+            <div class="mb-3">
+                <label>Max Participants</label>
+                <input type="number" name="max_participants" class="form-control" value="{{ tour.max_participants }}" required>
+            </div>
+            <div class="mb-3">
+                <label>Photo filename</label>
+                <input type="text" name="photos" class="form-control" value="{{ tour.photos }}" required>
+            </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label>Duration (minutes)</label>
