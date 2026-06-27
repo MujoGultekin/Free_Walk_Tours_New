@@ -5,6 +5,24 @@
 {% block content %}
 <div class="col-md-8">
   <div class="card shadow-sm border p-4 mb-4">
+    <!-- Carousel Başlangıcı -->
+    <div id="tourCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for photo in photos %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+          <img src="{{ url_for('static', filename='images/' + photo.strip()) }}" class="d-block w-100 rounded" alt="Tour Photo" style="height: 400px; object-fit: cover;">
+        </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#tourCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#tourCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+    <!-- Carousel Bitişi -->
+
     <h2 class="text-primary fw-bold">{{ tour.title }}</h2>
     <p class="lead text-muted">{{ tour.description }}</p>
     
@@ -23,14 +41,12 @@
 <div class="col-md-4">
   <div class="card shadow border p-4">
     <h4 class="fw-bold mb-3"><i class="bi bi-bookmark-plus text-success me-2"></i>Book This Tour</h4>
-    
     {% if current_user.is_authenticated and current_user.role == 'participant' %}
     <form action="{{ url_for('participant.book_tour', tour_id=tour.id) }}" method="POST">
       <div class="mb-3">
         <label for="txt_date" class="form-label small fw-bold">Choose Date</label>
         <input type="date" class="form-control" name="txt_date" id="txt_date" required>
       </div>
-
       <div class="mb-3">
         <label for="txt_count" class="form-label small fw-bold">Additional Guests</label>
         <select class="form-select" name="txt_count" id="txt_count" onchange="generateInputs()">
@@ -40,9 +56,7 @@
           <option value="3">+3 Guests</option>
         </select>
       </div>
-
       <div id="nameInputs" class="mb-3"></div>
-
       <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">Confirm Booking</button>
     </form>
     {% elif current_user.is_authenticated %}

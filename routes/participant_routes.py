@@ -12,7 +12,12 @@ def tour_detail(tour_id):
     if not tour:
         flash("Tour not found.", "danger")
         return redirect(url_for("home"))
-    return render_template("tour_detail.html", tour=tour)
+    
+    # Görselleri virgülle ayırıp bir listeye çeviriyoruz
+    # Eğer photos boşsa boş liste dönüyoruz
+    photos_list = tour['photos'].split(',') if tour['photos'] else []
+    
+    return render_template("tour_detail.html", tour=tour, photos=photos_list)
 
 @participant_bp.route("/tour/book/<int:tour_id>", methods=["POST"])
 @login_required

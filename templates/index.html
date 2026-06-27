@@ -8,12 +8,10 @@
     <div class="card-body">
       <h5 class="card-title mb-3"><i class="bi bi-search text-primary me-2"></i>Find a Tour</h5>
       <form action="{{ url_for('home') }}" method="GET">
-        
         <div class="mb-3">
           <label for="date" class="form-label small fw-bold">Tour Date</label>
           <input type="date" class="form-control form-control-sm" id="date" name="date" value="{{ request.args.get('date', '') }}">
         </div>
-
         <div class="mb-3">
           <label for="language" class="form-label small fw-bold">Language</label>
           <select class="form-select form-select-sm" id="language" name="language">
@@ -24,7 +22,6 @@
             <option value="German" {% if request.args.get('language') == 'German' %}selected{% endif %}>German</option>
           </select>
         </div>
-
         <div class="mb-3">
           <label for="duration" class="form-label small fw-bold">Max Duration (Hours)</label>
           <select class="form-select form-select-sm" id="duration" name="duration">
@@ -34,7 +31,6 @@
             <option value="180" {% if request.args.get('duration') == '180' %}selected{% endif %}>Up to 3 Hours</option>
           </select>
         </div>
-
         <div class="d-grid gap-2">
           <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-filter me-1"></i> Filter</button>
           <a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-sm text-center">Reset</a>
@@ -50,19 +46,18 @@
     {% for tour in tours %}
     <div class="col">
       <div class="card h-100 shadow-sm border">
+        {% set tour_photos = tour.photos.split(',') %}
+        <img src="{{ url_for('static', filename='images/' + tour_photos[0].strip()) }}" class="card-img-top" alt="{{ tour.title }}" style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary fw-bold mb-2">{{ tour.title }}</h5>
           <p class="card-text text-muted small flex-grow-1">{{ tour.description }}</p>
-          
           <hr class="text-muted my-2">
-          
           <div class="small mb-3">
             <div class="mb-1"><strong><i class="bi bi-geo-alt-fill text-danger me-1"></i> Meeting:</strong> {{ tour.meeting_point }}</div>
             <div class="mb-1"><strong><i class="bi bi-clock-history text-info me-1"></i> Duration:</strong> {{ tour.duration }} mins</div>
             <div class="mb-1"><strong><i class="bi bi-translate text-success me-1"></i> Language:</strong> {{ tour.language }}</div>
             <div><strong><i class="bi bi-people-fill text-warning me-1"></i> Max Capacity:</strong> {{ tour.max_participants }} people</div>
           </div>
-          
           <a href="{{ url_for('participant.tour_detail', tour_id=tour.id) }}" class="btn btn-dark btn-sm mt-auto w-100">View Tour Details & Book</a>
         </div>
       </div>

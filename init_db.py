@@ -93,7 +93,7 @@ def initialize_database():
     cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (3, 'Alessandro', 'Admin', 'admin@roma.com', ?, 'administrator', NULL)", (hashed_pwd,))
 
     # 3. TURLAR (Tam 5 Adet Farklı Süre, Dil ve İçerik)
-    cursor.execute("INSERT INTO tours VALUES (1, 1, 'Colosseum & Ancient Rome Walk', 'Colosseum Metro Exit', 120, 'English', 15, 'Discover the history of the Roman Empire.', 'Colosseum,Roman Forum', 'colosseum.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (1, 1, 'Colosseum & Ancient Rome Walk', 'Colosseum Metro Exit', 120, 'English', 15, 'Discover the history of the Roman Empire.', 'Colosseum,Roman Forum', 'colosseum1.jpg,colosseum2.jpg,colosseum3.jpg,colosseum4.jpg,colosseum5.jpg')")
     cursor.execute("INSERT INTO tours VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 'Explore the magnificent St. Peters Basilica.', 'St. Peters Square,Basilica', 'vatican.jpg')")
     cursor.execute("INSERT INTO tours VALUES (3, 4, 'Trastevere Evening Food Tour', 'Piazza Trilussa', 150, 'Spanish', 12, 'Taste authentic Roman street food and local legends.', 'Trastevere,Bakery,Gelateria', 'trastevere.jpg')")
     cursor.execute("INSERT INTO tours VALUES (4, 1, 'Pantheon & Hidden Gems', 'Piazza della Rotonda', 90, 'English', 20, 'Uncover the secrets of ancient temples and squares.', 'Pantheon,Trevi Fountain,Navona', 'pantheon.jpg')")
