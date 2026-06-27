@@ -27,8 +27,11 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
     conn = sqlite3.connect("roma_tours.db")
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    query = "SELECT DISTINCT t.* FROM tours t JOIN tour_schedule ts ON t.id = ts.tour_id WHERE 1=1"
+    
+    # JOIN yerine LEFT JOIN kullanıldı
+    query = "SELECT DISTINCT t.* FROM tours t LEFT JOIN tour_schedule ts ON t.id = ts.tour_id WHERE 1=1"
     params = []
+    
     if p_lang:
         query += " AND t.language = ?"
         params.append(p_lang)
@@ -36,8 +39,10 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
         query += " AND t.duration <= ?"
         params.append(int(p_duration))
     if p_date_name:
+        # Eğer tarih filtresi varsa, LEFT JOIN üzerinden günü kontrol ediyoruz
         query += " AND ts.day_of_week = ?"
         params.append(p_date_name)
+        
     cursor.execute(query, params)
     tours = cursor.fetchall()
     cursor.close()

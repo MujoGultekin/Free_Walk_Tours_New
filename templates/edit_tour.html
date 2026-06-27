@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Tour{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-4">Edit Tour: {{ tour.title }}</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label>Title</label>
+                <input type="text" name="title" class="form-control" value="{{ tour.title }}" required>
+            </div>
+            <div class="mb-3">
+                <label>Meeting Point</label>
+                <input type="text" name="meeting_point" class="form-control" value="{{ tour.meeting_point }}" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Duration (minutes)</label>
+                    <input type="number" name="duration" class="form-control" value="{{ tour.duration }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Language</label>
+                    <input type="text" name="language" class="form-control" value="{{ tour.language }}" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="3" required>{{ tour.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label>Stops (comma separated)</label>
+                <input type="text" name="stops" class="form-control" value="{{ tour.stops }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Update Tour</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
