@@ -1,17 +1,21 @@
-# routes/guide_routes.py
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
 from routes.auth_routes import guide_required
 from dao import tours_dao
 
 guide_bp = Blueprint('guide', __name__)
 
+# Görsellerin kaydedileceği klasör
+UPLOAD_FOLDER = 'static/images'
+
 @guide_bp.route("/guide/tour/new", methods=["GET", "POST"])
 @login_required
 @guide_required
 def new_tour():
     if request.method == "POST":
-        # Formdan gelen verileri alıyoruz
+        # Form verilerini alıyoruz
         title = request.form.get("title")
         meeting_point = request.form.get("meeting_point")
         duration = request.form.get("duration")
@@ -19,15 +23,27 @@ def new_tour():
         max_participants = request.form.get("max_participants")
         description = request.form.get("description")
         stops = request.form.get("stops")
-        photos = request.form.get("photos") # Basit olması için dosya yolu/adı
 
-        # Veritabanına kayıt işlemini gerçekleştiriyoruz
+        # Fotoğrafları işliyoruz
+        files = request.files.getlist("photos")
+        file_names = []
+        
+        for file in files:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                # Dosyayı static/images klasörüne kaydediyoruz
+                file.save(os.path.join(current_app.root_path, UPLOAD_FOLDER, filename))
+                file_names.append(filename)
+        
+        # İsimleri virgülle birleştirip string olarak veritabanına gönderiyoruz
+        photos_str = ",".join(file_names)
+
         tours_dao.new_tour(
             current_user.id, title, meeting_point, duration, 
-            language, max_participants, description, stops, photos
+            language, max_participants, description, stops, photos_str
         )
         
-        flash("New tour created successfully!", "success")
+        flash("New tour with photos created successfully!", "success")
         return redirect(url_for("auth.profile_guide"))
         
     return render_template("new_tour.html")
@@ -40,8 +56,8 @@ def edit_tour(tour_id):
         flash("This tour has active reservations and cannot be modified!", "danger")
         return redirect(url_for("auth.profile_guide"))
     
-    # EĞER POST İSTEĞİ GELİRSE GÜNCELLE
     if request.method == "POST":
+        # Edit kısmında dosya yükleme opsiyonel olabilir, burada sadece metin güncelliyoruz
         tours_dao.update_tour(
             tour_id,
             request.form.get("title"),
@@ -51,12 +67,11 @@ def edit_tour(tour_id):
             request.form.get("max_participants"),
             request.form.get("description"),
             request.form.get("stops"),
-            request.form.get("photos")
+            request.form.get("photos") # Eski yöntem devam ediyor
         )
         flash("Tour updated successfully!", "success")
         return redirect(url_for("auth.profile_guide"))
     
-    # EĞER GET İSTEĞİ GELİRSE SAYFAYI GÖSTER (Sadece burası çalışmalı)
     tour = tours_dao.get_tour_by_id(tour_id)
     return render_template("edit_tour.html", tour=tour)
 
@@ -65,10 +80,12 @@ def edit_tour(tour_id):
 @guide_required
 def submit_report(tour_id):
     actual_participants = request.form.get("actual_participants")
-    photo = request.files.get("photo") # Dosya yükleme kısmı
+    photo = request.files.get("photo") 
     
-    # Burada tours_dao.py içine yeni bir add_report fonksiyonu ekleyip çağırabilirsin
-    tours_dao.add_report(tour_id, actual_participants, photo.filename)
+    if photo:
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(current_app.root_path, UPLOAD_FOLDER, filename))
+        tours_dao.add_report(tour_id, actual_participants, filename)
     
     flash("Report submitted successfully!", "success")
     return redirect(url_for("auth.profile_guide"))
@@ -77,7 +94,6 @@ def submit_report(tour_id):
 @login_required
 @guide_required
 def delete_tour(tour_id):
-    # Silmeden önce yine rezervasyon kontrolü yapalım
     if tours_dao.has_reservations(tour_id):
         flash("This tour has active reservations and cannot be deleted!", "danger")
         return redirect(url_for("auth.profile_guide"))
