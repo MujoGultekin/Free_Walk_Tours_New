@@ -14,9 +14,25 @@
 
   <div class="card shadow-sm border mb-4">
     <div class="card-header bg-dark text-white fw-bold">My Active Walking Tours</div>
-    <div class="card-body py-4 text-center text-muted">
-       <i class="bi bi-map fs-2 mb-2 d-block text-secondary"></i>
-       <p class="mb-0 small">No custom tour routes created yet. Click the button above to start your first tour!</p>
+    <div class="card-body py-4">
+       {% if tours %}
+         <div class="list-group">
+           {% for tour in tours %}
+             <div class="list-group-item d-flex justify-content-between align-items-center">
+               <div>
+                 <h6 class="mb-0 fw-bold">{{ tour.title }}</h6>
+                 <small class="text-muted">{{ tour.language }} | {{ tour.duration }} mins</small>
+               </div>
+               <a href="{{ url_for('guide.edit_tour', tour_id=tour.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+             </div>
+           {% endfor %}
+         </div>
+       {% else %}
+         <div class="text-center text-muted">
+           <i class="bi bi-map fs-2 mb-2 d-block text-secondary"></i>
+           <p class="mb-0 small">No custom tour routes created yet. Click the button above to start your first tour!</p>
+         </div>
+       {% endif %}
     </div>
   </div>
 </div>
