@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from routes.auth_routes import participant_required
 from dao import tours_dao, reservations_dao
+from datetime import datetime, timedelta
 
 participant_bp = Blueprint('participant', __name__)
 
@@ -41,10 +42,24 @@ def book_tour(tour_id):
 @login_required
 @participant_required
 def cancel_booking(res_id):
+    # 1. Rezervasyonu getir[cite: 19]
     res = reservations_dao.get_reservation_by_id(res_id)
+    
+    # 2. Yetkilendirme kontrolü (Senin orijinal kodun)
     if res and res["participant_id"] == current_user.id:
-        reservations_dao.cancel_reservation(res_id)
-        flash("Reservation has been successfully cancelled.", "info")
+        
+        # 3. 24 Saat kuralı kontrolü
+        # 'tour_date' formatını YYYY-MM-DD olarak varsayıyorum
+        tour_date = datetime.strptime(res['tour_date'], "%Y-%m-%d")
+        
+        if datetime.now() < (tour_date - timedelta(hours=24)):
+            reservations_dao.cancel_reservation(res_id)
+            flash("Reservation has been successfully cancelled.", "info")
+        else:
+            flash("Cannot cancel: less than 24 hours to the tour.", "danger")
+            
     else:
-        flash("Unauthorized action.", "danger")
+        # Yetkisiz erişim veya rezervasyon bulunamadı
+        flash("Unauthorized action or reservation not found.", "danger")
+        
     return redirect(url_for("auth.profile_participant"))
