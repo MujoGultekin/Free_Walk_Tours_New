@@ -94,10 +94,10 @@ def initialize_database():
 
     # 3. TURLAR (Tam 5 Adet Farklı Süre, Dil ve İçerik)
     cursor.execute("INSERT INTO tours VALUES (1, 1, 'Colosseum & Ancient Rome Walk', 'Colosseum Metro Exit', 120, 'English', 15, 'Discover the history of the Roman Empire.', 'Colosseum,Roman Forum', 'colosseum1.jpg,colosseum2.jpg,colosseum3.jpg,colosseum4.jpg,colosseum5.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 'Explore the magnificent St. Peters Basilica.', 'St. Peters Square,Basilica', 'vatican.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (3, 4, 'Trastevere Evening Food Tour', 'Piazza Trilussa', 150, 'Spanish', 12, 'Taste authentic Roman street food and local legends.', 'Trastevere,Bakery,Gelateria', 'trastevere.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (4, 1, 'Pantheon & Hidden Gems', 'Piazza della Rotonda', 90, 'English', 20, 'Uncover the secrets of ancient temples and squares.', 'Pantheon,Trevi Fountain,Navona', 'pantheon.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (5, 4, 'Roman Catacombs Underground', 'Piazza Venezia Bus Stop', 240, 'German', 8, 'Descend into the underground early Christian burial chambers.', 'Appian Way,Catacombs of San Callisto', 'catacombs.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 'Explore the magnificent St. Peters Basilica.', 'St. Peters Square,Basilica', 'vatican1.jpg,vatican2.jpg,vatican3.jpg,vatican4.jpg,vatican5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (3, 4, 'Trastevere Evening Food Tour', 'Piazza Trilussa', 150, 'Spanish', 12, 'Taste authentic Roman street food and local legends.', 'Trastevere,Bakery,Gelateria', 'trastevere1.jpg,trastevere2.jpg,trastevere3.jpg,trastevere4.jpg,trastevere5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (4, 1, 'Pantheon & Hidden Gems', 'Piazza della Rotonda', 90, 'English', 20, 'Uncover the secrets of ancient temples and squares.', 'Pantheon,Trevi Fountain,Navona', 'pantheon.jpg,pantheon2.jpg,pantheon3.jpg,pantheon4.jpg,pantheon5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (5, 4, 'Roman Catacombs Underground', 'Piazza Venezia Bus Stop', 240, 'German', 8, 'Descend into the underground early Christian burial chambers.', 'Appian Way,Catacombs of San Callisto', 'catacombs1.jpg,catacombs2.jpg,catacombs3.jpg,catacombs4.jpg,catacombs5.jpg')")
 
     # 4. HAFTALIK TAKVİM (Programlar)
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (1, 'Monday', '10:00')")
