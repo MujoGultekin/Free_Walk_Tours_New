@@ -112,7 +112,7 @@ def initialize_database():
 
     # 5. SEED PAST RESERVATION (For demonstration)
     past_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
-    cursor.execute("INSERT INTO reservations (tour_id, participant_id, tour_date, additional_count, additional_names) VALUES (1, 2, ?, 4, 'Jane Doe, Alice Smith, Bob Brown, Charlie Green')", (past_date,))
+    cursor.execute("INSERT INTO reservations (tour_id, participant_id, tour_date, additional_count, additional_names) VALUES (1, 2, ?, 3, 'Jane Doe, Alice Smith, Bob Brown')", (past_date,))
     
     conn.commit()
     conn.close()

@@ -60,7 +60,7 @@
         <label for="txt_date" class="form-label small fw-bold">Choose Date</label>
         <input type="date" class="form-control" name="txt_date" id="txt_date" required>
         <script>
-        // Users cannot chose past date
+        // Users cannot choose past date
         document.getElementById('txt_date').min = new Date().toISOString().split('T')[0];
         </script>
         </div>
