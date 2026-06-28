@@ -27,23 +27,28 @@ def new_tour():
         # Fotoğrafları işliyoruz
         files = request.files.getlist("photos")
         file_names = []
-        
         for file in files:
             if file and file.filename:
                 filename = secure_filename(file.filename)
-                # Dosyayı static/images klasörüne kaydediyoruz
                 file.save(os.path.join(current_app.root_path, UPLOAD_FOLDER, filename))
                 file_names.append(filename)
-        
-        # İsimleri virgülle birleştirip string olarak veritabanına gönderiyoruz
         photos_str = ",".join(file_names)
 
-        tours_dao.new_tour(
+        # 1. Turu oluştur ve yeni tur ID'sini al[cite: 15]
+        new_id = tours_dao.new_tour(
             current_user.id, title, meeting_point, duration, 
             language, max_participants, description, stops, photos_str
         )
         
-        flash("New tour with photos created successfully!", "success")
+        # 2. Seçilen günleri ve saatleri tour_schedule tablosuna kaydet[cite: 15]
+        selected_days = request.form.getlist("days")
+        for day in selected_days:
+            start_time = request.form.get(f"times_{day}")
+            # Hem gün seçilmiş olmalı hem de saati girilmiş olmalı
+            if start_time: 
+                tours_dao.add_tour_schedule(new_id, day, start_time)
+        
+        flash("New tour with schedule created successfully!", "success")
         return redirect(url_for("auth.profile_guide"))
         
     return render_template("new_tour.html")

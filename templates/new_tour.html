@@ -1,48 +1,73 @@
 {% extends 'base.html' %}
 
-{% block title %}Create New Tour{% endblock %}
+{% block title %}Create a New Tour{% endblock %}
 
 {% block content %}
-<div class="col-12 d-flex justify-content-center py-4">
-    <div class="card shadow border p-4" style="width: 100%; max-width: 600px;">
-        <h2 class="mb-4 fw-bold text-primary">Create a New Walking Tour</h2>
+<div class="col-md-8 mx-auto">
+    <div class="card shadow border p-4">
+        <h2 class="text-primary fw-bold mb-4">Create a New Walking Tour</h2>
         
         <form method="POST" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="title" class="form-label small fw-bold">Title</label>
-                <input type="text" class="form-control" name="title" id="title" required>
+                <label class="form-label fw-bold">Title</label>
+                <input type="text" name="title" class="form-control" required>
             </div>
+
             <div class="mb-3">
-                <label for="meeting_point" class="form-label small fw-bold">Meeting Point</label>
-                <input type="text" class="form-control" name="meeting_point" id="meeting_point" required>
+                <label class="form-label fw-bold">Meeting Point</label>
+                <input type="text" name="meeting_point" class="form-control" required>
             </div>
-            <div class="row g-2 mb-3">
-                <div class="col-md-6">
-                    <label for="duration" class="form-label small fw-bold">Duration (minutes)</label>
-                    <input type="number" class="form-control" name="duration" id="duration" required>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Duration (minutes)</label>
+                    <input type="number" name="duration" class="form-control" required>
                 </div>
-                <div class="col-md-6">
-                    <label for="language" class="form-label small fw-bold">Language</label>
-                    <input type="text" class="form-control" name="language" id="language" required>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Language</label>
+                    <input type="text" name="language" class="form-control" required>
                 </div>
             </div>
+
             <div class="mb-3">
-                <label for="max_participants" class="form-label small fw-bold">Max Participants</label>
-                <input type="number" class="form-control" name="max_participants" id="max_participants" required>
+                <label class="form-label fw-bold">Max Participants</label>
+                <input type="number" name="max_participants" class="form-control" required>
             </div>
+
             <div class="mb-3">
-                <label for="description" class="form-label small fw-bold">Description</label>
-                <textarea class="form-control" name="description" id="description" rows="3" required></textarea>
+                <label class="form-label fw-bold">Description</label>
+                <textarea name="description" class="form-control" rows="4" required></textarea>
             </div>
+
+            <!-- Haftalık Program Seçimi -->
+            <div class="mb-4 border p-3 bg-light rounded">
+                <label class="form-label fw-bold">Weekly Schedule</label>
+                <div class="row">
+                    {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+                    <div class="col-md-6 mb-2">
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input class="form-check-input mt-0" type="checkbox" name="days" value="{{ day }}">
+                            </div>
+                            <span class="input-group-text" style="width: 100px;">{{ day }}</span>
+                            <input type="time" name="times_{{ day }}" class="form-control">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
             <div class="mb-3">
-                <label for="stops" class="form-label small fw-bold">Stops (comma separated)</label>
-                <input type="text" class="form-control" name="stops" id="stops" placeholder="e.g. Colosseum, Forum" required>
+                <label class="form-label fw-bold">Stops (comma separated)</label>
+                <input type="text" name="stops" class="form-control" placeholder="e.g. Colosseum, Forum" required>
             </div>
+
             <div class="mb-4">
-                <label for="photos" class="form-label small fw-bold">Upload Tour Photos (Select up to 5)</label>
-                <input type="file" class="form-control" name="photos" id="photos" accept="image/*" multiple required>
+                <label class="form-label fw-bold">Upload Tour Photos (Select up to 5)</label>
+                <input type="file" name="photos" class="form-control" multiple accept="image/*">
             </div>
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Create Tour</button>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Create Tour</button>
         </form>
     </div>
 </div>

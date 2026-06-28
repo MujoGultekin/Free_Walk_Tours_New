@@ -61,9 +61,11 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
 
 def get_tour_by_id(p_tour_id):
     query = """
-        SELECT t.*, GROUP_CONCAT(ts.day_of_week || ' (' || ts.start_time || ')', ', ') as schedule 
+        SELECT t.*, u.name as guide_name, u.surname as guide_surname,
+               GROUP_CONCAT(ts.day_of_week || ' (' || ts.start_time || ')', ', ') as schedule 
         FROM tours t 
         LEFT JOIN tour_schedule ts ON t.id = ts.tour_id 
+        JOIN users u ON t.guide_id = u.id
         WHERE t.id = ?
         GROUP BY t.id
     """
@@ -132,3 +134,11 @@ def get_past_tours_with_reservations(p_guide_id):
     tours = [dict(row) for row in cursor.fetchall()]
     conn.close()
     return tours
+
+def add_tour_schedule(p_tour_id, p_day, p_time):
+    query = "INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (?, ?, ?)"
+    conn = sqlite3.connect("roma_tours.db")
+    cursor = conn.cursor()
+    cursor.execute(query, (p_tour_id, p_day, p_time))
+    conn.commit()
+    conn.close()

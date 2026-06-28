@@ -30,7 +30,7 @@
               <td><strong>{{ b.title }}</strong></td>
               <td><span class="badge bg-secondary">{{ b.tour_date }}</span></td>
               <td>{{ b.meeting_point }}</td>
-              <td>+{{ b.additional_count }} people</td>
+              <td>+{{ b.additional_count-1 }} people</td>
               <td>
                 <form action="{{ url_for('participant.cancel_booking', res_id=b.res_id) }}" 
                       method="POST" 
