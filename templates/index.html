@@ -58,7 +58,10 @@
             <div class="mb-1"><strong><i class="bi bi-geo-alt-fill text-danger me-1"></i> Meeting:</strong> {{ tour.meeting_point }}</div>
             <div class="mb-1"><strong><i class="bi bi-clock-history text-info me-1"></i> Duration:</strong> {{ tour.duration }} mins</div>
             <div class="mb-1"><strong><i class="bi bi-translate text-success me-1"></i> Language:</strong> {{ tour.language }}</div>
-            <div><strong><i class="bi bi-people-fill text-warning me-1"></i> Max Capacity:</strong> {{ tour.max_participants }} people</div>
+            <div class="mb-1">
+              <strong><i class="bi bi-calendar-check text-warning me-1"></i> Schedule:</strong> 
+              <span class="text-muted">{{ tour.schedule if tour.schedule else 'Contact guide' }}</span>
+            </div>
           </div>
           <a href="{{ url_for('participant.tour_detail', tour_id=tour.id) }}" class="btn btn-dark btn-sm mt-auto w-100">View Tour Details & Book</a>
         </div>

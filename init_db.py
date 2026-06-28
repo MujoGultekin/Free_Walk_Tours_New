@@ -102,9 +102,10 @@ def initialize_database():
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (5, 'Saturday', '09:00')")
 
     # 5. GEÇMİŞ TARİHLİ REZERVASYON (5 Kişi: 1 ana katılımcı + 4 ek kişi)
+
     past_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
     cursor.execute("INSERT INTO reservations (tour_id, participant_id, tour_date, additional_count, additional_names) VALUES (1, 2, ?, 4, 'Jane Doe, Alice Smith, Bob Brown, Charlie Green')", (past_date,))
-
+    
     conn.commit()
     conn.close()
     print("Database initialized successfully with test data.")

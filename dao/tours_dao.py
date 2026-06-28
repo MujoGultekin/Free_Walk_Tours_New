@@ -28,8 +28,14 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
-    # JOIN yerine LEFT JOIN kullanıldı
-    query = "SELECT DISTINCT t.* FROM tours t LEFT JOIN tour_schedule ts ON t.id = ts.tour_id WHERE 1=1"
+    # GROUP_CONCAT ile günleri ve saatleri birleştiriyoruz
+    query = """
+        SELECT t.*, 
+               GROUP_CONCAT(ts.day_of_week || ' (' || ts.start_time || ')', ', ') as schedule 
+        FROM tours t 
+        LEFT JOIN tour_schedule ts ON t.id = ts.tour_id 
+        WHERE 1=1
+    """
     params = []
     
     if p_lang:
@@ -38,10 +44,14 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
     if p_duration:
         query += " AND t.duration <= ?"
         params.append(int(p_duration))
+    
+    # Gruplama ekliyoruz ki aynı tur bir kez gelsin ama tüm günleri schedule içinde birleşsin
+    query += " GROUP BY t.id"
+    
+    # Eğer tarih filtresi varsa HAVING kullanarak filtreleme yapıyoruz
     if p_date_name:
-        # Eğer tarih filtresi varsa, LEFT JOIN üzerinden günü kontrol ediyoruz
-        query += " AND ts.day_of_week = ?"
-        params.append(p_date_name)
+        query += " HAVING schedule LIKE ?"
+        params.append(f"%{p_date_name}%")
         
     cursor.execute(query, params)
     tours = cursor.fetchall()
