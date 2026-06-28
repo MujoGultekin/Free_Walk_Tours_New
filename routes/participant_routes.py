@@ -1,3 +1,4 @@
+# routes/participant_routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from routes.auth_routes import participant_required
@@ -9,9 +10,7 @@ participant_bp = Blueprint('participant', __name__)
 
 @participant_bp.route("/tour/detail/<int:tour_id>")
 def tour_detail(tour_id):
-    """
-    Renders the detailed view of a specific tour.
-    """
+    """Renders the detailed view of a specific tour."""
     tour = tours_dao.get_tour_by_id(tour_id)
     if not tour:
         flash("Tour not found.", "danger")
@@ -26,9 +25,7 @@ def tour_detail(tour_id):
 @login_required
 @participant_required
 def book_tour(tour_id):
-    """
-    Handles tour booking requests, including capacity and validation checks.
-    """
+    """Handles tour booking requests, including capacity and validation checks."""
     tour = tours_dao.get_tour_by_id(tour_id)
     if not tour:
         flash("Tour not found.", "danger")
@@ -43,12 +40,10 @@ def book_tour(tour_id):
         flash("Please enter exactly the number of names corresponding to the guests selected.", "danger")
         return redirect(url_for("participant.tour_detail", tour_id=tour_id))
 
-    # ------------------------------------------------------------------
-    # 1. DÜZELTME: Seçilen Tarihin Gününün Kontrolü (Örn: Salı tura pazartesi booklanmasın)
-    # ------------------------------------------------------------------
+    # 1. VALIDATION: Check if the selected date matches the scheduled tour day
     try:
         chosen_date_obj = datetime.strptime(chosen_date_str, "%Y-%m-%d")
-        chosen_day_name = chosen_date_obj.strftime("%A")  # Örn: "Monday"
+        chosen_day_name = chosen_date_obj.strftime("%A")  # e.g., "Monday"
     except (ValueError, TypeError):
         flash("Invalid date selected.", "danger")
         return redirect(url_for("participant.tour_detail", tour_id=tour_id))
@@ -57,10 +52,7 @@ def book_tour(tour_id):
         flash(f"This tour is only available on days matching its schedule: {tour['schedule']}.", "danger")
         return redirect(url_for("participant.tour_detail", tour_id=tour_id))
 
-    # ------------------------------------------------------------------
-    # 2. DÜZELTME: Sadece Seçilen Tarihteki Rezervasyonların Sayılması
-    # ------------------------------------------------------------------
-    # DAO fonksiyonuna seçilen tarihi de paslıyoruz
+    # 2. CAPACITY CHECK: Fetch total bookings filtered strictly by the chosen date
     current_booked = reservations_dao.get_total_booked_count(tour_id, chosen_date_str)
     
     if (current_booked + 1 + add_count) > tour['max_participants']:
@@ -78,9 +70,7 @@ def book_tour(tour_id):
 @login_required
 @participant_required
 def cancel_booking(res_id):
-    """
-    Handles cancellation of existing bookings, restricted to 24 hours before the tour.
-    """
+    """Handles cancellation of existing bookings, restricted to 24 hours before the tour."""
     res = reservations_dao.get_reservation_by_id(res_id)
     if res and res["participant_id"] == current_user.id:
         tour_date = datetime.strptime(res['tour_date'], "%Y-%m-%d")
