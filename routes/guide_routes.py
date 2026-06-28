@@ -1,3 +1,4 @@
+# routes/guide_routes.py
 import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from werkzeug.utils import secure_filename
@@ -15,9 +16,7 @@ UPLOAD_FOLDER = 'static/images'
 @login_required
 @guide_required
 def new_tour():
-    """
-    Handles the creation of a new tour, including file uploads and schedule configuration.
-    """
+    """Handles the creation of a new tour, including file uploads and schedule configuration."""
     if request.method == "POST":
         # Retrieve form data
         title = request.form.get("title")
@@ -61,9 +60,7 @@ def new_tour():
 @login_required
 @guide_required
 def edit_tour(tour_id):
-    """
-    Allows guides to update existing tour details if no reservations are present.
-    """
+    """Allows guides to update existing tour details if no reservations are present."""
     if tours_dao.has_reservations(tour_id):
         flash("This tour has active reservations and cannot be modified!", "danger")
         return redirect(url_for("auth.profile_guide"))
@@ -91,9 +88,7 @@ def edit_tour(tour_id):
 @login_required
 @guide_required
 def submit_report(tour_id):
-    """
-    Handles post-tour reporting, including participant counts and photo evidence.
-    """
+    """Handles post-tour reporting, including participant counts and photo evidence."""
     count = request.form.get("actual_participants")
     file = request.files.get("report_photo")
     
@@ -102,7 +97,7 @@ def submit_report(tour_id):
         # Save report photo to the designated upload folder
         file.save(os.path.join(current_app.root_path, UPLOAD_FOLDER, filename))
         
-        # Store report data in the database
+        # Store report data in the database with synchronized parameters
         reservations_dao.save_tour_report(tour_id, count, filename)
         flash("Report submitted successfully!", "success")
     else:
@@ -114,9 +109,7 @@ def submit_report(tour_id):
 @login_required
 @guide_required
 def delete_tour(tour_id):
-    """
-    Handles deletion of a tour route if no reservations are linked to it.
-    """
+    """Handles deletion of a tour route if no reservations are linked to it."""
     if tours_dao.has_reservations(tour_id):
         flash("This tour has active reservations and cannot be deleted!", "danger")
         return redirect(url_for("auth.profile_guide"))
