@@ -60,15 +60,18 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
     return tours
 
 def get_tour_by_id(p_tour_id):
-    query = "SELECT * FROM tours WHERE id = ?"
-    import sqlite3
+    query = """
+        SELECT t.*, GROUP_CONCAT(ts.day_of_week || ' (' || ts.start_time || ')', ', ') as schedule 
+        FROM tours t 
+        LEFT JOIN tour_schedule ts ON t.id = ts.tour_id 
+        WHERE t.id = ?
+        GROUP BY t.id
+    """
     conn = sqlite3.connect("roma_tours.db")
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(query, (p_tour_id,))
     tour = cursor.fetchone()
-    conn.commit()
-    cursor.close()
     conn.close()
     return tour
 
