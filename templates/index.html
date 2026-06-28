@@ -11,8 +11,12 @@
       <form action="{{ url_for('home') }}" method="GET">
         <div class="mb-3">
           <label for="date" class="form-label small fw-bold">Tour Date</label>
-          <input type="date" class="form-control form-control-sm" id="date" name="date" value="{{ request.args.get('date', '') }}">
-        </div>
+          <input type="date" class="form-control form-control-sm" id="filter_date" name="date" value="{{ request.args.get('date', '') }}">
+          <script>
+    // Prevents user to select past dates
+    document.getElementById('filter_date').min = new Date().toISOString().split('T')[0];
+    </script>
+    </div>
         <div class="mb-3">
           <label for="language" class="form-label small fw-bold">Language</label>
           <select class="form-select form-select-sm" id="language" name="language">
