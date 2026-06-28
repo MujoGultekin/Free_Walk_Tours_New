@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+from dao import tours_dao
 from models import User
 
 # Doğrudan fonksiyonları import ediyoruz (Çakışmaları önlemek için kesin çözüm)
@@ -110,7 +111,8 @@ def profile_guide():
     # tours_dao içindeki fonksiyonu kullanarak turları çekiyoruz
     from dao.tours_dao import get_tours_by_guide_id
     my_tours = get_tours_by_guide_id(current_user.id)
-    return render_template("profile_guide.html", tours=my_tours)
+    reportable_tours = tours_dao.get_past_tours_with_reservations(current_user.id)
+    return render_template("profile_guide.html", tours=my_tours,reportable_tours=reportable_tours)
 
 @auth_bp.route("/participant/profile")
 @login_required
