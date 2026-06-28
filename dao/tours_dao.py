@@ -94,3 +94,21 @@ def delete_tour(p_tour_id):
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_past_tours_with_reservations(p_guide_id):
+    """Tarihi geçmiş ve en az bir rezervasyonu olan turları getirir."""
+    query = """
+        SELECT DISTINCT t.* 
+        FROM tours t
+        JOIN reservations r ON t.id = r.tour_id
+        WHERE t.guide_id = ? AND r.tour_date < DATE('now')
+    """
+    import sqlite3
+    conn = sqlite3.connect("roma_tours.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute(query, (p_guide_id,))
+    tours = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tours

@@ -27,6 +27,17 @@ def initialize_database():
     ''')
 
     cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tour_reports (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tour_id INTEGER,
+        actual_participants INTEGER,
+        photo_path TEXT,
+        report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(tour_id) REFERENCES tours(id)
+        );
+    ''')
+
+    cursor.execute('''
         CREATE TABLE tours (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             guide_id INTEGER NOT NULL,
@@ -62,17 +73,6 @@ def initialize_database():
             additional_names TEXT,
             FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
             FOREIGN KEY (participant_id) REFERENCES users(id) ON DELETE CASCADE
-        );
-    ''')
-
-    cursor.execute('''
-        CREATE TABLE tour_reports (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            tour_id INTEGER NOT NULL,
-            tour_date TEXT NOT NULL,
-            actual_participants INTEGER NOT NULL,
-            evidence_photo TEXT NOT NULL,
-            FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
         );
     ''')
 

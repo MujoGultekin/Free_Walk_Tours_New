@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
 from routes.auth_routes import guide_required
-from dao import tours_dao
+from dao import reservations_dao, tours_dao
 
 guide_bp = Blueprint('guide', __name__)
 
@@ -79,15 +79,21 @@ def edit_tour(tour_id):
 @login_required
 @guide_required
 def submit_report(tour_id):
-    actual_participants = request.form.get("actual_participants")
-    photo = request.files.get("photo") 
+    count = request.form.get("actual_participants")
+    file = request.files.get("report_photo")
     
-    if photo:
-        filename = secure_filename(photo.filename)
-        photo.save(os.path.join(current_app.root_path, UPLOAD_FOLDER, filename))
-        tours_dao.add_report(tour_id, actual_participants, filename)
-    
-    flash("Report submitted successfully!", "success")
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+        # Mevcut dosya yükleme mantığınla uyumlu:
+        file.save(os.path.join(current_app.root_path, UPLOAD_FOLDER, filename))
+        
+        # DAO üzerinden veritabanına kaydet
+        reservations_dao.save_tour_report(tour_id, count, filename)
+        flash("Report submitted successfully!", "success")
+    else:
+        flash("Please upload a valid photo.", "danger")
+        
+    # Senin sisteminde çalışan doğru rota:
     return redirect(url_for("auth.profile_guide"))
 
 @guide_bp.route("/guide/tour/delete/<int:tour_id>", methods=["POST"])

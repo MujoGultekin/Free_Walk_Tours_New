@@ -60,3 +60,13 @@ def get_total_booked_count(p_tour_id):
     total = res[0] if res[0] else 0
     conn.close()
     return total
+
+def save_tour_report(p_tour_id, p_actual_count, p_photo_path):
+    query = "INSERT INTO tour_reports (tour_id, actual_participants, photo_path) VALUES (?,?,?)"
+    import sqlite3
+    conn = sqlite3.connect("roma_tours.db")
+    cursor = conn.cursor()
+    cursor.execute(query, (p_tour_id, p_actual_count, p_photo_path))
+    conn.commit()
+    cursor.close()
+    conn.close()
