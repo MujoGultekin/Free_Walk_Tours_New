@@ -6,17 +6,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dao import tours_dao
 from models import User
 
-# Doğrudan fonksiyonları import ediyoruz (Çakışmaları önlemek için kesin çözüm)
+# Direct function imports to prevent naming conflicts
 from dao.users_dao import get_user_by_email, get_user_by_id, get_all_guides_with_tours, get_platform_statistics
 from dao.users_dao import new_user
 
 import dao.users_dao as users_dao
 
-print(dir(users_dao))
-
 auth_bp = Blueprint('auth', __name__)
 
+# --- Access Control Decorators ---
+
 def guide_required(f):
+    """Decorator to restrict access to authenticated guides only."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated or current_user.role != 'guide':
@@ -26,6 +27,7 @@ def guide_required(f):
     return decorated_function
 
 def participant_required(f):
+    """Decorator to restrict access to authenticated participants only."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated or current_user.role != 'participant':
@@ -35,6 +37,7 @@ def participant_required(f):
     return decorated_function
 
 def admin_required(f):
+    """Decorator to restrict access to authenticated administrators only."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated or current_user.role != 'administrator':
@@ -43,8 +46,11 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# --- Authentication Routes ---
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    """Handles user authentication and role-based redirection."""
     if request.method == "POST":
         email = request.form.get("txt_email").strip()
         password = request.form.get("txt_password")
@@ -58,6 +64,7 @@ def login():
             login_user(user_obj)
             flash(f"Welcome back, {user_obj.name}!", "success")
             
+            # Redirect to appropriate profile based on user role
             if user_obj.role == 'administrator':
                 return redirect(url_for("auth.profile_admin"))
             elif user_obj.role == 'guide':
@@ -69,12 +76,14 @@ def login():
 @auth_bp.route("/logout")
 @login_required
 def logout():
+    """Logs out the current user and clears the session."""
     logout_user()
     flash("Successfully logged out.", "info")
     return redirect(url_for("home"))
 
 @auth_bp.route("/register/participant", methods=["GET", "POST"])
 def register_participant():
+    """Registers a new participant account."""
     if request.method == "POST":
         name = request.form.get("txt_name").strip()
         surname = request.form.get("txt_surname").strip()
@@ -90,6 +99,7 @@ def register_participant():
 
 @auth_bp.route("/register/guide", methods=["GET", "POST"])
 def register_guide():
+    """Registers a new guide account with language proficiency data."""
     if request.method == "POST":
         name = request.form.get("txt_name").strip()
         surname = request.form.get("txt_surname").strip()
@@ -104,20 +114,23 @@ def register_guide():
         flash("Email already exists.", "danger")
     return render_template("register_guide.html")
 
+# --- Profile Routes ---
+
 @auth_bp.route("/guide/profile")
 @login_required
 @guide_required
 def profile_guide():
-    # tours_dao içindeki fonksiyonu kullanarak turları çekiyoruz
+    """Displays the guide's dashboard with created tours and reportable history."""
     from dao.tours_dao import get_tours_by_guide_id
     my_tours = get_tours_by_guide_id(current_user.id)
     reportable_tours = tours_dao.get_past_tours_with_reservations(current_user.id)
-    return render_template("profile_guide.html", tours=my_tours,reportable_tours=reportable_tours)
+    return render_template("profile_guide.html", tours=my_tours, reportable_tours=reportable_tours)
 
 @auth_bp.route("/participant/profile")
 @login_required
 @participant_required
 def profile_participant():
+    """Displays the participant's dashboard with active bookings."""
     from dao.reservations_dao import get_participant_reservations
     my_bookings = get_participant_reservations(current_user.id)
     return render_template("profile_participant.html", bookings=my_bookings)
@@ -126,7 +139,8 @@ def profile_participant():
 @login_required
 @admin_required
 def profile_admin():
+    """Displays the admin dashboard with platform-wide statistics."""
     from dao.users_dao import get_platform_statistics, get_all_guides_with_tours
-    stats = get_platform_statistics() # Artık içinde lang_stats var
+    stats = get_platform_statistics()
     guides = get_all_guides_with_tours()
     return render_template("profile_admin.html", stats=stats, guides=guides)

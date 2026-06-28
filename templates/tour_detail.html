@@ -5,7 +5,7 @@
 {% block content %}
 <div class="col-md-8">
   <div class="card shadow-sm border p-4 mb-4">
-    <!-- Carousel Başlangıcı -->
+    <!-- Image carousel for showcasing tour photos -->
     <div id="tourCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
       <div class="carousel-inner">
         {% for photo in photos %}
@@ -23,12 +23,11 @@
         <span class="carousel-control-next-icon"></span>
       </button>
     </div>
-    <!-- Carousel Bitişi -->
 
     <h2 class="text-primary fw-bold">{{ tour.title }}</h2>
     <p class="lead text-muted">{{ tour.description }}</p>
     
-    <!-- Rehber Bilgisi -->
+    <!-- Guide information section -->
     <div class="alert alert-light border shadow-sm">
         <h5 class="fw-bold mb-0">
             <i class="bi bi-person-badge"></i> Your Guide: {{ tour.guide_name }} {{ tour.guide_surname }}
@@ -51,6 +50,7 @@
   </div>
 </div>
 
+<!-- Booking sidebar for authenticated participants -->
 <div class="col-md-4">
   <div class="card shadow border p-4">
     <h4 class="fw-bold mb-3">Book This Tour</h4>
@@ -81,6 +81,7 @@
   </div>
 </div>
 
+<!-- Script to dynamically generate input fields for additional guests -->
 <script>
 function generateInputs() {
     let count = document.getElementById("txt_count").value;

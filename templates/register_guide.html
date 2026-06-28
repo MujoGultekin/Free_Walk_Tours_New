@@ -3,6 +3,7 @@
 {% block title %}Register as Guide{% endblock %}
 
 {% block content %}
+<!-- Registration form container for new tour guides -->
 <div class="col-12 d-flex justify-content-center align-items-center py-4">
   <div class="card shadow border p-4 guide-register-card">
     <div class="text-center mb-4">
@@ -11,6 +12,7 @@
       <p class="text-muted small">Join our community to publish your architectural and historical walks</p>
     </div>
     
+    <!-- Guide registration form fields -->
     <form action="{{ url_for('auth.register_guide') }}" method="POST">
       <div class="row g-2 mb-3">
         <div class="col-md-6">
@@ -33,6 +35,7 @@
         <input type="password" class="form-control" name="txt_password" id="txt_password" required>
       </div>
 
+      <!-- Multi-select checkbox section for supported languages -->
       <div class="mb-4">
         <label class="form-label small fw-bold d-block">Spoken Languages (Select all that apply)</label>
         <div class="row g-2 border rounded p-3 bg-light">

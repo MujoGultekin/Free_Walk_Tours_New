@@ -25,6 +25,7 @@
                </div>
                
                <div class="d-flex gap-2 align-items-center">
+                 <!-- Actions for existing tours: Edit and Delete -->
                  <a href="{{ url_for('guide.edit_tour', tour_id=tour.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                  
                  <form action="{{ url_for('guide.delete_tour', tour_id=tour.id) }}" method="POST" class="d-inline">
@@ -35,7 +36,7 @@
                     </button>
                  </form>
 
-                 <!-- Gereksinimlere uygun raporlama form filtresi -->
+                 <!-- Reporting form for completed tours -->
                  {% if reportable_tours and tour.id in reportable_tours|map(attribute='id') %}
                    <form action="{{ url_for('guide.submit_report', tour_id=tour.id) }}" method="POST" enctype="multipart/form-data" class="border p-2 rounded bg-light">
                     <small class="d-block mb-1 fw-bold">Post-Tour Report</small>
@@ -51,6 +52,7 @@
            {% endfor %}
          </div>
        {% else %}
+         <!-- Displayed when no tours are registered by the guide -->
          <div class="text-center text-muted">
            <i class="bi bi-map fs-2 mb-2 d-block text-secondary"></i>
            <p class="mb-0 small">No custom tour routes created yet. Click the button above to start your first tour!</p>

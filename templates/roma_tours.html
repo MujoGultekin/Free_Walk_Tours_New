@@ -4,13 +4,13 @@
 
 {% block content %}
 <div class="col-12 p-0">
-    <!-- Hero section, CSS sınıfları ile yönetiliyor -->
+    <!-- Hero section: Displays the main landing page header and call-to-action-->
     <div class="hero-section d-flex flex-column justify-content-center align-items-center text-white text-center position-relative">
         <div class="container">
             <h1 class="display-1 fw-bold">Walk Through History</h1>
             <p class="lead fs-3 mb-4">Experience the magic of the Eternal City with our expert local guides.</p>
             
-            <!-- URL dinamik olarak tanımlandı -->
+            <!-- Call-to-action button linking to the main tour listing page-->
             <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg px-5 shadow-sm">
                 Get Started
             </a>

@@ -3,26 +3,34 @@
 {% block title %}Edit Tour{% endblock %}
 
 {% block content %}
+<!-- Edit tour form section, restricted to guide users -->
 <div class="col-12 d-flex justify-content-center py-4">
     <div class="card shadow border p-4" style="width: 100%; max-width: 600px;">
         <h2 class="mb-4 fw-bold text-primary">Edit Tour: {{ tour.title }}</h2>
+        
         <form method="POST">
+            <!-- Basic tour information fields -->
             <div class="mb-3">
                 <label for="title" class="form-label small fw-bold">Title</label>
                 <input type="text" name="title" id="title" class="form-control" value="{{ tour.title }}" required>
             </div>
+            
             <div class="mb-3">
                 <label for="meeting_point" class="form-label small fw-bold">Meeting Point</label>
                 <input type="text" name="meeting_point" id="meeting_point" class="form-control" value="{{ tour.meeting_point }}" required>
             </div>
+            
             <div class="mb-3">
                 <label for="max_participants" class="form-label small fw-bold">Max Participants</label>
                 <input type="number" name="max_participants" id="max_participants" class="form-control" value="{{ tour.max_participants }}" required>
             </div>
+            
             <div class="mb-3">
                 <label for="photos" class="form-label small fw-bold">Photo filename</label>
                 <input type="text" name="photos" id="photos" class="form-control" value="{{ tour.photos }}" required>
             </div>
+            
+            <!-- Duration and language input row -->
             <div class="row g-2 mb-3">
                 <div class="col-md-6">
                     <label for="duration" class="form-label small fw-bold">Duration (minutes)</label>
@@ -33,14 +41,17 @@
                     <input type="text" name="language" id="language" class="form-control" value="{{ tour.language }}" required>
                 </div>
             </div>
+            
             <div class="mb-3">
                 <label for="description" class="form-label small fw-bold">Description</label>
                 <textarea name="description" id="description" class="form-control" rows="3" required>{{ tour.description }}</textarea>
             </div>
+            
             <div class="mb-3">
                 <label for="stops" class="form-label small fw-bold">Stops (comma separated)</label>
                 <input type="text" name="stops" id="stops" class="form-control" value="{{ tour.stops }}" required>
             </div>
+            
             <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Update Tour</button>
         </form>
     </div>

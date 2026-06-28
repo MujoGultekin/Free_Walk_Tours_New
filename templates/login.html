@@ -3,6 +3,7 @@
 {% block title %}Sign In{% endblock %}
 
 {% block content %}
+<!-- Login form container, centered for better user experience -->
 <div class="col-12 d-flex justify-content-center align-items-center py-4">
   <div class="card shadow border p-4 login-card">
     <div class="text-center mb-4">
@@ -11,6 +12,7 @@
       <p class="text-muted small">Enter your credentials to access the platform</p>
     </div>
     
+    <!-- Authentication submission form -->
     <form action="{{ url_for('auth.login') }}" method="POST">
       <div class="mb-3">
         <label for="txt_email" class="form-label small fw-bold">Email Address</label>

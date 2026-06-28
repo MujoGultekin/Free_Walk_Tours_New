@@ -3,6 +3,7 @@
 {% block title %}Explore Tours{% endblock %}
 
 {% block content %}
+<!-- Sidebar for tour filtering options -->
 <aside class="col-12 col-md-4 col-lg-3">
   <div class="card shadow-sm mb-4">
     <div class="card-body">
@@ -39,12 +40,14 @@
   </div>
 </aside>
 
+<!-- Main section displaying filtered tour cards -->
 <section class="col-12 col-md-8 col-lg-9">
   <h4 class="mb-4 text-secondary">Available Walking Tours in Rome</h4>
   <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for tour in tours %}
     <div class="col">
       <div class="card h-100 shadow-sm border">
+        <!-- Process and display the first tour photo -->
         {% set tour_photos = tour.photos.split(',') %}
         <img src="{{ url_for('static', filename='images/' + tour_photos[0].strip()) }}" 
              class="card-img-top" 
@@ -68,6 +71,7 @@
       </div>
     </div>
     {% else %}
+    <!-- Display message if no tours are found for the applied filters -->
     <div class="col-12">
       <div class="alert alert-info text-center py-4 shadow-sm" role="alert">
         <i class="bi bi-info-circle fs-3 d-block mb-2"></i>

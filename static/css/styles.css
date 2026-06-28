@@ -1,17 +1,21 @@
 /* static/css/styles.css */
+
+/* Global body styling with responsive font settings */
 body {
     background-color: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1rem; /* Esnek yazı tipi */
+    font-size: 1rem; 
 }
 
+/* Navbar branding transition effect */
 .navbar-brand img {
     transition: transform 0.3s ease;
 }
 
+/* Card components with smooth hover effects for better UX */
 .card {
     border: none;
-    border-radius: 0.6rem; /* % yerine rem kullanarak esnek köşe */
+    border-radius: 0.6rem; 
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -20,15 +24,17 @@ body {
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08) !important;
 }
 
+/* Hero section with responsive height and background image overlay */
 .hero-section {
-    height: 80vh; /* Ekran yüksekliğine duyarlı */
+    height: 80vh; 
     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/roma.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
+/* Responsive constraints for registration and login cards */
 .register-card, .login-card {
-    width: 95%; /* Küçük ekranlarda esnek */
-    max-width: 500px; /* Büyük ekranlarda sınırlı */
+    width: 95%; 
+    max-width: 500px; 
 }

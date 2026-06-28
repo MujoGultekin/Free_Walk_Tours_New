@@ -3,17 +3,22 @@ from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta
 
 def initialize_database():
+    """
+    Initializes the SQLite database: drops existing tables, creates the schema,
+    and populates it with sample data for demonstration purposes.
+    """
     conn = sqlite3.connect("roma_tours.db")
     cursor = conn.cursor()
 
-    # Eski tabloları temizle
+    # Drop existing tables to ensure a clean slate
     cursor.execute('DROP TABLE IF EXISTS tour_reports;')
     cursor.execute('DROP TABLE IF EXISTS reservations;')
     cursor.execute('DROP TABLE IF EXISTS tour_schedule;')
     cursor.execute('DROP TABLE IF EXISTS tours;')
     cursor.execute('DROP TABLE IF EXISTS users;')
 
-    # 1. TABLOLARI OLUŞTURMA
+    # 1. TABLE CREATION
+    # User table to store account information and roles
     cursor.execute('''
         CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,6 +31,7 @@ def initialize_database():
         );
     ''')
 
+    # Stores post-tour reports, including actual attendance and evidence photos
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS tour_reports (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,6 +43,7 @@ def initialize_database():
         );
     ''')
 
+    # Main tours table defining tour details and associated guide
     cursor.execute('''
         CREATE TABLE tours (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,6 +60,7 @@ def initialize_database():
         );
     ''')
 
+    # Schedule table to map tours to specific days and start times
     cursor.execute('''
         CREATE TABLE tour_schedule (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,6 +71,7 @@ def initialize_database():
         );
     ''')
 
+    # Reservation table linking participants to specific tour sessions
     cursor.execute('''
         CREATE TABLE reservations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,10 +85,10 @@ def initialize_database():
         );
     ''')
 
-    # Ortak Şifre: 'password123'
+    # Default password used for test accounts
     hashed_pwd = generate_password_hash("password123")
 
-    # 2. KULLANICILAR
+    # 2. SEED USERS
     cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (1, 'Marco', 'Rossi', 'marco@guide.com', ?, 'guide', 'English,Italian')", (hashed_pwd,))
     cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (4, 'Giulia', 'Verdi', 'giulia@guide.com', ?, 'guide', 'Spanish,German')", (hashed_pwd,))
     cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (2, 'John', 'Doe', 'john@part.com', ?, 'participant', NULL)", (hashed_pwd,))
@@ -87,22 +96,21 @@ def initialize_database():
     cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (6, 'Luca', 'Neri', 'luca@part.com', ?, 'participant', NULL)", (hashed_pwd,))
     cursor.execute("INSERT INTO users (id, name, surname, email, password, role, languages) VALUES (3, 'Alessandro', 'Admin', 'admin@roma.com', ?, 'administrator', NULL)", (hashed_pwd,))
 
-    # 3. TURLAR
-    cursor.execute("INSERT INTO tours VALUES (1, 1, 'Colosseum & Ancient Rome Walk', 'Colosseum Metro Exit', 120, 'English', 15, 'Step back in time to the heart of the Roman Empire. Our expert guides will lead you through the underground chambers and the grand arena, sharing tales of gladiators, emperors, and the architectural marvels that defined an era.', 'Colosseum,Roman Forum', 'colosseum1.jpg,colosseum2.jpg,colosseum3.jpg,colosseum4.jpg,colosseum5.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 'Uncover the hidden narratives behind the world''s smallest state. This journey takes you beyond the popular galleries, offering intimate insights into the architectural brilliance of the Basilica and the historical enigmas of the Holy See.', 'St. Peters Square,Basilica', 'vatican1.jpg,vatican2.jpg,vatican3.jpg,vatican4.jpg,vatican5.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (3, 4, 'Trastevere Evening Food Tour', 'Piazza Trilussa', 150, 'Spanish', 12, 'Experience the authentic flavor of Rome. We wander through the charming, cobblestone streets of Trastevere, stopping at family-owned eateries to taste local delicacies, from crispy supplì to authentic Roman-style pizza', 'Trastevere,Bakery,Gelateria', 'trastevere1.jpg,trastevere2.jpg,trastevere3.jpg,trastevere4.jpg,trastevere5.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (4, 1, 'Pantheon & Hidden Gems', 'Piazza della Rotonda', 90, 'English', 20, 'Discover the celestial beauty of the Pantheon, one of the best-preserved monuments of Ancient Rome, and lose yourself in the vibrant energy of Piazza Navona and the surrounding baroque fountains.', 'Pantheon,Trevi Fountain,Navona', 'pantheon1.jpg,pantheon2.jpg,pantheon3.jpg,pantheon4.jpg,pantheon5.jpg')")
-    cursor.execute("INSERT INTO tours VALUES (5, 4, 'Roman Catacombs Underground', 'Piazza Venezia Bus Stop', 240, 'German', 8, 'Descend beneath the modern city to explore the silent, mysterious catacombs. Walk the ancient burial tunnels and uncover the fascinating history of early Roman Christianity hidden away from the world above.', 'Appian Way,Catacombs of San Callisto', 'catacombs1.jpg,catacombs2.jpg,catacombs3.jpg,catacombs4.jpg,catacombs5.jpg')")
+    # 3. SEED TOURS
+    cursor.execute("INSERT INTO tours VALUES (1, 1, 'Colosseum & Ancient Rome Walk', 'Colosseum Metro Exit', 120, 'English', 15, 'Step back in time to the heart of the Roman Empire.', 'Colosseum,Roman Forum', 'colosseum1.jpg,colosseum2.jpg,colosseum3.jpg,colosseum4.jpg,colosseum5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (2, 1, 'Vatican Secrets Tour', 'St. Peters Square Obelisk', 180, 'Italian', 10, 'Uncover the hidden narratives behind the world''s smallest state.', 'St. Peters Square,Basilica', 'vatican1.jpg,vatican2.jpg,vatican3.jpg,vatican4.jpg,vatican5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (3, 4, 'Trastevere Evening Food Tour', 'Piazza Trilussa', 150, 'Spanish', 12, 'Experience the authentic flavor of Rome.', 'Trastevere,Bakery,Gelateria', 'trastevere1.jpg,trastevere2.jpg,trastevere3.jpg,trastevere4.jpg,trastevere5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (4, 1, 'Pantheon & Hidden Gems', 'Piazza della Rotonda', 90, 'English', 20, 'Discover the celestial beauty of the Pantheon.', 'Pantheon,Trevi Fountain,Navona', 'pantheon1.jpg,pantheon2.jpg,pantheon3.jpg,pantheon4.jpg,pantheon5.jpg')")
+    cursor.execute("INSERT INTO tours VALUES (5, 4, 'Roman Catacombs Underground', 'Piazza Venezia Bus Stop', 240, 'German', 8, 'Descend beneath the modern city to explore the catacombs.', 'Appian Way,Catacombs of San Callisto', 'catacombs1.jpg,catacombs2.jpg,catacombs3.jpg,catacombs4.jpg,catacombs5.jpg')")
 
-    # 4. HAFTALIK TAKVİM
+    # 4. SEED WEEKLY SCHEDULE
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (1, 'Monday', '10:00')")
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (2, 'Wednesday', '14:00')")
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (3, 'Friday', '18:30')")
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (4, 'Tuesday', '11:00')")
     cursor.execute("INSERT INTO tour_schedule (tour_id, day_of_week, start_time) VALUES (5, 'Saturday', '09:00')")
 
-    # 5. GEÇMİŞ TARİHLİ REZERVASYON (5 Kişi: 1 ana katılımcı + 4 ek kişi)
-
+    # 5. SEED PAST RESERVATION (For demonstration)
     past_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
     cursor.execute("INSERT INTO reservations (tour_id, participant_id, tour_date, additional_count, additional_names) VALUES (1, 2, ?, 4, 'Jane Doe, Alice Smith, Bob Brown, Charlie Green')", (past_date,))
     

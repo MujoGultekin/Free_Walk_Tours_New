@@ -4,10 +4,9 @@ from flask_login import LoginManager
 from datetime import datetime
 from models import User
 
-# Doğrudan fonksiyon bazlı import yapısı
+# Importing DAO functions and Blueprints for modularity
 from dao.users_dao import get_user_by_id
 from dao.tours_dao import search_tours
-
 from routes.auth_routes import auth_bp
 from routes.guide_routes import guide_bp
 from routes.participant_routes import participant_bp
@@ -15,12 +14,16 @@ from routes.participant_routes import participant_bp
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "RomaFreeWalkingToursSecretKey2026"
 
+# Configuring LoginManager for authentication
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Callback to reload the user object from the user ID stored in the session.
+    """
     db_user = get_user_by_id(user_id)
     if db_user:
         return User(
@@ -29,6 +32,7 @@ def load_user(user_id):
         )
     return None
 
+# Registering blueprints to organize routes
 app.register_blueprint(auth_bp)
 app.register_blueprint(guide_bp)
 app.register_blueprint(participant_bp)
@@ -39,6 +43,9 @@ def roma_tours():
 
 @app.route("/")
 def home():
+    """
+    Home route: Handles filtering of tours based on language, duration, and date.
+    """
     lang = request.args.get("language")
     duration = request.args.get("duration")
     date_input = request.args.get("date")
@@ -46,6 +53,7 @@ def home():
     day_name = None
     if date_input:
         try:
+            # Converting date string to day name to match weekly schedule
             day_name = datetime.strptime(date_input, "%Y-%m-%d").strftime("%A")
         except ValueError:
             flash("Invalid date format.", "danger")
