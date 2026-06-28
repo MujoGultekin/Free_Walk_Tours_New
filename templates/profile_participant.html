@@ -27,25 +27,27 @@
           </thead>
           <tbody>
             {% for b in bookings %}
+            {% if b.tour_date >= today_str %}
             <tr>
               <td><strong>{{ b.title }}</strong></td>
               <td><span class="badge bg-secondary">{{ b.tour_date }}</span></td>
               <td>{{ b.meeting_point }}</td>
-              <td>+{{ b.additional_count}} people</td>
+              <td>+{{ b.additional_count }} people</td>
               <td>
                 <!-- Booking cancellation form with confirmation prompt -->
-                <form action="{{ url_for('participant.cancel_booking', res_id=b.res_id) }}" 
-                      method="POST" 
-                      onsubmit="return confirm('Are you sure you want to cancel this booking?');">
-                  <button type="submit" class="btn btn-danger btn-sm">
-                    <i class="bi bi-trash"></i> Cancel
-                  </button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                 <form action="{{ url_for('participant.cancel_booking', res_id=b.res_id) }}" 
+                 method="POST" 
+                 onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                 <button type="submit" class="btn btn-danger btn-sm">
+                  <i class="bi bi-trash"></i> Cancel
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
       </div>
       {% else %}
       <!-- Placeholder message if no bookings are found -->

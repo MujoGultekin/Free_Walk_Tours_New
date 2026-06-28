@@ -1,4 +1,5 @@
 # routes/auth_routes.py
+from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from functools import wraps
@@ -133,7 +134,8 @@ def profile_participant():
     """Displays the participant's dashboard with active bookings."""
     from dao.reservations_dao import get_participant_reservations
     my_bookings = get_participant_reservations(current_user.id)
-    return render_template("profile_participant.html", bookings=my_bookings)
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    return render_template("profile_participant.html", bookings=my_bookings,today_str=today_str)
 
 @auth_bp.route("/admin/profile")
 @login_required
