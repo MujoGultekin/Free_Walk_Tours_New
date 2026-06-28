@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="col-12 d-flex justify-content-center align-items-center py-4">
-  <div class="card shadow border p-4" style="width: 100%; max-width: 520px;">
+  <div class="card shadow border p-4 guide-register-card">
     <div class="text-center mb-4">
       <i class="bi bi-person-badge-fill text-primary display-4"></i>
       <h3 class="fw-bold mt-2">Tour Guide Registration</h3>
@@ -36,30 +36,14 @@
       <div class="mb-4">
         <label class="form-label small fw-bold d-block">Spoken Languages (Select all that apply)</label>
         <div class="row g-2 border rounded p-3 bg-light">
+          {% for lang in ['English', 'Italian', 'Spanish', 'German'] %}
           <div class="col-6">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="chk_languages" value="English" id="lang_en">
-              <label class="form-check-label small" for="lang_en">English</label>
+              <input class="form-check-input" type="checkbox" name="chk_languages" value="{{ lang }}" id="lang_{{ lang.lower()[:2] }}">
+              <label class="form-check-label small" for="lang_{{ lang.lower()[:2] }}">{{ lang }}</label>
             </div>
           </div>
-          <div class="col-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="chk_languages" value="Italian" id="lang_it">
-              <label class="form-check-label small" for="lang_it">Italian</label>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="chk_languages" value="Spanish" id="lang_es">
-              <label class="form-check-label small" for="lang_es">Spanish</label>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="chk_languages" value="German" id="lang_de">
-              <label class="form-check-label small" for="lang_de">German</label>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
       

@@ -2,41 +2,33 @@
 body {
     background-color: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem; /* Esnek yazı tipi */
 }
 
 .navbar-brand img {
     transition: transform 0.3s ease;
 }
 
-.navbar-brand img:hover {
-    transform: scale(1.05);
-}
-
 .card {
     border: none;
-    border-radius: 10px;
+    border-radius: 0.6rem; /* % yerine rem kullanarak esnek köşe */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
-}
-
-footer {
-    background-color: #ffffff;
-}
-
-.badge-lang {
-    background-color: #e9ecef;
-    color: #495057;
-    font-weight: 500;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08) !important;
 }
 
 .hero-section {
-    height: 80vh;
+    height: 80vh; /* Ekran yüksekliğine duyarlı */
     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/roma.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+.register-card, .login-card {
+    width: 95%; /* Küçük ekranlarda esnek */
+    max-width: 500px; /* Büyük ekranlarda sınırlı */
 }

@@ -16,10 +16,9 @@
           <label for="language" class="form-label small fw-bold">Language</label>
           <select class="form-select form-select-sm" id="language" name="language">
             <option value="">All Languages</option>
-            <option value="English" {% if request.args.get('language') == 'English' %}selected{% endif %}>English</option>
-            <option value="Italian" {% if request.args.get('language') == 'Italian' %}selected{% endif %}>Italian</option>
-            <option value="Spanish" {% if request.args.get('language') == 'Spanish' %}selected{% endif %}>Spanish</option>
-            <option value="German" {% if request.args.get('language') == 'German' %}selected{% endif %}>German</option>
+            {% for lang in ['English', 'Italian', 'Spanish', 'German'] %}
+            <option value="{{ lang }}" {% if request.args.get('language') == lang %}selected{% endif %}>{{ lang }}</option>
+            {% endfor %}
           </select>
         </div>
         <div class="mb-3">
@@ -47,7 +46,10 @@
     <div class="col">
       <div class="card h-100 shadow-sm border">
         {% set tour_photos = tour.photos.split(',') %}
-        <img src="{{ url_for('static', filename='images/' + tour_photos[0].strip()) }}" class="card-img-top" alt="{{ tour.title }}" style="height: 200px; object-fit: cover;">
+        <img src="{{ url_for('static', filename='images/' + tour_photos[0].strip()) }}" 
+             class="card-img-top" 
+             alt="{{ tour.title }}" 
+             style="height: 200px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary fw-bold mb-2">{{ tour.title }}</h5>
           <p class="card-text text-muted small flex-grow-1">{{ tour.description }}</p>

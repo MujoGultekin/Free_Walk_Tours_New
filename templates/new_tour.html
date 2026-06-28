@@ -1,64 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create New Tour</title>
-    <!-- CSS dosya yolunu style.css konumuna göre düzelttim -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <style>
-        .form-container { max-width: 600px; margin: 40px auto; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
-        button:hover { background-color: #0056b3; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<div class="container form-container">
-    <!-- Sayfanın genel tasarımına uyması için card sınıfını kullandık -->
-    <div class="card shadow p-4">
-        <h2 class="mb-4">Create a New Walking Tour</h2>
-        <!-- Dosya yükleme özelliği için enctype ekledik -->
+{% block title %}Create New Tour{% endblock %}
+
+{% block content %}
+<div class="col-12 d-flex justify-content-center py-4">
+    <div class="card shadow border p-4" style="width: 100%; max-width: 600px;">
+        <h2 class="mb-4 fw-bold text-primary">Create a New Walking Tour</h2>
+        
         <form method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" name="title" required>
+            <div class="mb-3">
+                <label for="title" class="form-label small fw-bold">Title</label>
+                <input type="text" class="form-control" name="title" id="title" required>
             </div>
-            <div class="form-group">
-                <label>Meeting Point</label>
-                <input type="text" name="meeting_point" required>
+            <div class="mb-3">
+                <label for="meeting_point" class="form-label small fw-bold">Meeting Point</label>
+                <input type="text" class="form-control" name="meeting_point" id="meeting_point" required>
             </div>
-            <div class="form-group">
-                <label>Duration (minutes)</label>
-                <input type="number" name="duration" required>
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <label for="duration" class="form-label small fw-bold">Duration (minutes)</label>
+                    <input type="number" class="form-control" name="duration" id="duration" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="language" class="form-label small fw-bold">Language</label>
+                    <input type="text" class="form-control" name="language" id="language" required>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Language</label>
-                <input type="text" name="language" required>
+            <div class="mb-3">
+                <label for="max_participants" class="form-label small fw-bold">Max Participants</label>
+                <input type="number" class="form-control" name="max_participants" id="max_participants" required>
             </div>
-            <div class="form-group">
-                <label>Max Participants</label>
-                <input type="number" name="max_participants" required>
+            <div class="mb-3">
+                <label for="description" class="form-label small fw-bold">Description</label>
+                <textarea class="form-control" name="description" id="description" rows="3" required></textarea>
             </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" rows="3" required></textarea>
+            <div class="mb-3">
+                <label for="stops" class="form-label small fw-bold">Stops (comma separated)</label>
+                <input type="text" class="form-control" name="stops" id="stops" placeholder="e.g. Colosseum, Forum" required>
             </div>
-            <div class="form-group">
-                <label>Stops (comma separated)</label>
-                <input type="text" name="stops" placeholder="e.g. Colosseum, Forum" required>
+            <div class="mb-4">
+                <label for="photos" class="form-label small fw-bold">Upload Tour Photos (Select up to 5)</label>
+                <input type="file" class="form-control" name="photos" id="photos" accept="image/*" multiple required>
             </div>
-            <div class="form-group">
-                <label>Upload Tour Photos (Select up to 5)</label>
-                <!-- Dosya yükleme alanı (multiple ile çoklu seçim aktif) -->
-                <input type="file" name="photos" accept="image/*" multiple required>
-            </div>
-            <button type="submit">Create Tour</button>
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Create Tour</button>
         </form>
     </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

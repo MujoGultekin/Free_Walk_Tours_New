@@ -3,45 +3,45 @@
 {% block title %}Edit Tour{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="mb-4">Edit Tour: {{ tour.title }}</h2>
+<div class="col-12 d-flex justify-content-center py-4">
+    <div class="card shadow border p-4" style="width: 100%; max-width: 600px;">
+        <h2 class="mb-4 fw-bold text-primary">Edit Tour: {{ tour.title }}</h2>
         <form method="POST">
             <div class="mb-3">
-                <label>Title</label>
-                <input type="text" name="title" class="form-control" value="{{ tour.title }}" required>
+                <label for="title" class="form-label small fw-bold">Title</label>
+                <input type="text" name="title" id="title" class="form-control" value="{{ tour.title }}" required>
             </div>
             <div class="mb-3">
-                <label>Meeting Point</label>
-                <input type="text" name="meeting_point" class="form-control" value="{{ tour.meeting_point }}" required>
+                <label for="meeting_point" class="form-label small fw-bold">Meeting Point</label>
+                <input type="text" name="meeting_point" id="meeting_point" class="form-control" value="{{ tour.meeting_point }}" required>
             </div>
             <div class="mb-3">
-                <label>Max Participants</label>
-                <input type="number" name="max_participants" class="form-control" value="{{ tour.max_participants }}" required>
+                <label for="max_participants" class="form-label small fw-bold">Max Participants</label>
+                <input type="number" name="max_participants" id="max_participants" class="form-control" value="{{ tour.max_participants }}" required>
             </div>
             <div class="mb-3">
-                <label>Photo filename</label>
-                <input type="text" name="photos" class="form-control" value="{{ tour.photos }}" required>
+                <label for="photos" class="form-label small fw-bold">Photo filename</label>
+                <input type="text" name="photos" id="photos" class="form-control" value="{{ tour.photos }}" required>
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>Duration (minutes)</label>
-                    <input type="number" name="duration" class="form-control" value="{{ tour.duration }}" required>
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <label for="duration" class="form-label small fw-bold">Duration (minutes)</label>
+                    <input type="number" name="duration" id="duration" class="form-control" value="{{ tour.duration }}" required>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label>Language</label>
-                    <input type="text" name="language" class="form-control" value="{{ tour.language }}" required>
+                <div class="col-md-6">
+                    <label for="language" class="form-label small fw-bold">Language</label>
+                    <input type="text" name="language" id="language" class="form-control" value="{{ tour.language }}" required>
                 </div>
             </div>
             <div class="mb-3">
-                <label>Description</label>
-                <textarea name="description" class="form-control" rows="3" required>{{ tour.description }}</textarea>
+                <label for="description" class="form-label small fw-bold">Description</label>
+                <textarea name="description" id="description" class="form-control" rows="3" required>{{ tour.description }}</textarea>
             </div>
             <div class="mb-3">
-                <label>Stops (comma separated)</label>
-                <input type="text" name="stops" class="form-control" value="{{ tour.stops }}" required>
+                <label for="stops" class="form-label small fw-bold">Stops (comma separated)</label>
+                <input type="text" name="stops" id="stops" class="form-control" value="{{ tour.stops }}" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Update Tour</button>
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Update Tour</button>
         </form>
     </div>
 </div>

@@ -13,7 +13,6 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3 mb-4">
     <div class="container">
-      <!-- Marka logoya basınca Roma Tours landing page'e gider -->
       <a class="navbar-brand d-flex align-items-center fw-bold text-uppercase tracking-wider" href="{{ url_for('roma_tours') }}">
         <i class="bi bi-compass-fill me-2 text-warning fs-3"></i> Roma Tours
       </a>
@@ -69,8 +68,7 @@
     {% endwith %}
 
     <div class="row g-4">
-      {% block content %}
-      {% endblock %}
+      {% block content %}{% endblock %}
     </div>
   </div>
 

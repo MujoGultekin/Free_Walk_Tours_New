@@ -1,26 +1,57 @@
 {% extends 'base.html' %}
+
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
 <div class="col-12">
   <h2 class="mb-4">Platform Administration Dashboard</h2>
 
+  <!-- İstatistik Kartları -->
   <div class="row g-4 mb-5">
-    <div class="col-md-3"><div class="card bg-primary text-white shadow-sm text-center py-3"><h3>{{ stats.total_guides }}</h3><p>Total Guides</p></div></div>
-    <div class="col-md-3"><div class="card bg-success text-white shadow-sm text-center py-3"><h3>{{ stats.total_participants }}</h3><p>Total Participants</p></div></div>
-    <div class="col-md-3"><div class="card bg-info text-white shadow-sm text-center py-3"><h3>{{ stats.total_tours }}</h3><p>Total Tours</p></div></div>
-    <div class="col-md-3"><div class="card bg-warning text-dark shadow-sm text-center py-3"><h3>{{ stats.total_reservations }}</h3><p>Total Reservations</p></div></div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white shadow-sm text-center py-3">
+            <h3>{{ stats.total_guides }}</h3>
+            <p class="mb-0">Total Guides</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow-sm text-center py-3">
+            <h3>{{ stats.total_participants }}</h3>
+            <p class="mb-0">Total Participants</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white shadow-sm text-center py-3">
+            <h3>{{ stats.total_tours }}</h3>
+            <p class="mb-0">Total Tours</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark shadow-sm text-center py-3">
+            <h3>{{ stats.total_reservations }}</h3>
+            <p class="mb-0">Total Reservations</p>
+        </div>
+    </div>
   </div>
 
+  <!-- Dil Bazlı İstatistikler -->
   <div class="card shadow-sm border mb-5">
     <div class="card-header bg-dark text-white fw-bold">Reservations by Language</div>
     <div class="card-body">
       {% if stats.lang_stats %}
         <table class="table table-hover">
-          <thead><tr><th>Language</th><th>Number of Reservations</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Number of Reservations</th>
+            </tr>
+          </thead>
           <tbody>
             {% for lang in stats.lang_stats %}
-            <tr><td>{{ lang.language }}</td><td><span class="badge bg-primary">{{ lang.res_count }}</span></td></tr>
+            <tr>
+              <td>{{ lang.language }}</td>
+              <td><span class="badge bg-primary">{{ lang.res_count }}</span></td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>
@@ -30,6 +61,7 @@
     </div>
   </div>
 
+  <!-- Rehberler ve Turları -->
   <div class="card shadow-sm border mb-5">
     <div class="card-header bg-dark text-white">Registered Guides & Their Tours</div>
     <div class="card-body">
