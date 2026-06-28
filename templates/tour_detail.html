@@ -59,7 +59,11 @@
       <div class="mb-3">
         <label for="txt_date" class="form-label small fw-bold">Choose Date</label>
         <input type="date" class="form-control" name="txt_date" id="txt_date" required>
-      </div>
+        <script>
+        // Users cannot chose past date
+        document.getElementById('txt_date').min = new Date().toISOString().split('T')[0];
+        </script>
+        </div>
       <div class="mb-3">
         <label for="txt_count" class="form-label small fw-bold">Additional Guests</label>
         <select class="form-select" name="txt_count" id="txt_count" onchange="generateInputs()">
