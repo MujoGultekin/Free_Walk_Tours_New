@@ -1,10 +1,15 @@
 # dao/users_dao.py
+import os
 import sqlite3
 
+# Dynamic absolute path configuration for database access
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_FILE_PATH = os.path.join(BASE_DIR, "roma_tours.db")
+
 def new_user(p_name, p_surname, p_email, p_password, p_role, p_languages=None):
-    """Registers a new user in the database."""
+    """Register a new user in the database."""
     query = "INSERT INTO users (name, surname, email, password, role, languages) VALUES (?,?,?,?,?,?)"
-    conn = sqlite3.connect("roma_tours.db")
+    conn = sqlite3.connect(DB_FILE_PATH)
     cursor = conn.cursor()
     try:
         cursor.execute(query, (p_name, p_surname, p_email, p_password, p_role, p_languages))
@@ -18,9 +23,9 @@ def new_user(p_name, p_surname, p_email, p_password, p_role, p_languages=None):
     return success
 
 def get_user_by_email(p_email):
-    """Retrieves a user record by email address."""
+    """Retrieve a user record by email address."""
     query = "SELECT * FROM users WHERE email = ?"
-    conn = sqlite3.connect("roma_tours.db")
+    conn = sqlite3.connect(DB_FILE_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(query, (p_email,))
@@ -30,9 +35,9 @@ def get_user_by_email(p_email):
     return db_user
 
 def get_user_by_id(p_id):
-    """Retrieves a user record by unique identifier."""
+    """Retrieve a user record by unique identifier."""
     query = "SELECT * FROM users WHERE id = ?"
-    conn = sqlite3.connect("roma_tours.db")
+    conn = sqlite3.connect(DB_FILE_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(query, (p_id,))
@@ -42,9 +47,9 @@ def get_user_by_id(p_id):
     return db_user
 
 def get_all_guides_with_tours():
-    """Fetches all guides and their respective tours for administration display."""
+    """Fetch all guides and their respective tours for administration display."""
     query = "SELECT id, name, surname, email, languages FROM users WHERE role = 'guide'"
-    conn = sqlite3.connect("roma_tours.db")
+    conn = sqlite3.connect(DB_FILE_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(query)
@@ -63,8 +68,8 @@ def get_all_guides_with_tours():
     return guides_list
 
 def get_platform_statistics():
-    """Aggregates high-level platform metrics and language-based reservation stats."""
-    conn = sqlite3.connect("roma_tours.db")
+    """Aggregate high-level platform metrics and language-based reservation stats."""
+    conn = sqlite3.connect(DB_FILE_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     stats = {}

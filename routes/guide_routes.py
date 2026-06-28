@@ -1,6 +1,8 @@
-# routes/guide_routes.py
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import (
+    Blueprint, render_template, request, redirect, 
+    url_for, flash, current_app
+)
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
 from routes.auth_routes import guide_required
@@ -13,6 +15,7 @@ UPLOAD_FOLDER = 'static/images'
 @login_required
 @guide_required
 def new_tour():
+    """Handle the creation of a new tour route."""
     if request.method == "POST":
         title = request.form.get("title")
         meeting_point = request.form.get("meeting_point")
@@ -50,13 +53,12 @@ def new_tour():
 @login_required
 @guide_required
 def edit_tour(tour_id):
+    """Handle editing an existing tour route with report validation."""
     tour = tours_dao.get_tour_by_id(tour_id)
     
-    # Geçmiş ve rezervasyonlu turları al[cite: 5]
     reportable_tours = tours_dao.get_past_tours_with_reservations(current_user.id)
     is_reportable = any(t['id'] == tour_id for t in reportable_tours)
 
-    # Eğer raporlanması gerekiyorsa ve henüz raporlanmamışsa engelle
     if is_reportable and not tour['is_reported']:
         flash("You must submit the post-tour report before editing this completed tour!", "danger")
         return redirect(url_for("auth.profile_guide"))
@@ -93,6 +95,7 @@ def edit_tour(tour_id):
 @login_required
 @guide_required
 def submit_report(tour_id):
+    """Submit a post-tour report."""
     count = request.form.get("actual_participants")
     file = request.files.get("report_photo")
     
@@ -109,13 +112,11 @@ def submit_report(tour_id):
 @login_required
 @guide_required
 def delete_tour(tour_id):
+    """Handle deletion of a tour route with report validation."""
     tour = tours_dao.get_tour_by_id(tour_id)
-    
-    # Geçmiş ve rezervasyonlu turları al[cite: 5]
     reportable_tours = tours_dao.get_past_tours_with_reservations(current_user.id)
     is_reportable = any(t['id'] == tour_id for t in reportable_tours)
 
-    # Raporlanması gerekiyorsa ve henüz raporlanmamışsa silmeyi engelle
     if is_reportable and not tour['is_reported']:
         flash("You must submit the post-tour report before deleting this completed tour!", "danger")
         return redirect(url_for("auth.profile_guide"))
