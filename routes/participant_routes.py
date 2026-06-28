@@ -30,6 +30,11 @@ def book_tour(tour_id):
     Handles tour booking requests, including capacity and validation checks.
     """
     tour = tours_dao.get_tour_by_id(tour_id)
+    if not tour:
+        flash("Tour not found.", "danger")
+        return redirect(url_for("home"))
+
+    chosen_date_str = request.form.get("txt_date")
     add_count = int(request.form.get("txt_count", 0))
     guest_names_list = request.form.getlist("guest_names")
     
@@ -38,15 +43,33 @@ def book_tour(tour_id):
         flash("Please enter exactly the number of names corresponding to the guests selected.", "danger")
         return redirect(url_for("participant.tour_detail", tour_id=tour_id))
 
-    # Check tour availability against maximum participant limit
-    current_booked = reservations_dao.get_total_booked_count(tour_id)
+    # ------------------------------------------------------------------
+    # 1. DÜZELTME: Seçilen Tarihin Gününün Kontrolü (Örn: Salı tura pazartesi booklanmasın)
+    # ------------------------------------------------------------------
+    try:
+        chosen_date_obj = datetime.strptime(chosen_date_str, "%Y-%m-%d")
+        chosen_day_name = chosen_date_obj.strftime("%A")  # Örn: "Monday"
+    except (ValueError, TypeError):
+        flash("Invalid date selected.", "danger")
+        return redirect(url_for("participant.tour_detail", tour_id=tour_id))
+
+    if chosen_day_name.lower() not in tour['schedule'].lower():
+        flash(f"This tour is only available on days matching its schedule: {tour['schedule']}.", "danger")
+        return redirect(url_for("participant.tour_detail", tour_id=tour_id))
+
+    # ------------------------------------------------------------------
+    # 2. DÜZELTME: Sadece Seçilen Tarihteki Rezervasyonların Sayılması
+    # ------------------------------------------------------------------
+    # DAO fonksiyonuna seçilen tarihi de paslıyoruz
+    current_booked = reservations_dao.get_total_booked_count(tour_id, chosen_date_str)
+    
     if (current_booked + 1 + add_count) > tour['max_participants']:
-        flash(f"This tour is full! (Max {tour['max_participants']} people).", "danger")
+        flash(f"This tour is full for {chosen_date_str}! Only {tour['max_participants'] - current_booked} slots left.", "danger")
         return redirect(url_for("participant.tour_detail", tour_id=tour_id))
 
     # Save the reservation and redirect to participant profile
     guest_names_str = ", ".join(guest_names_list)
-    reservations_dao.new_reservation(tour_id, current_user.id, request.form.get("txt_date"), add_count, guest_names_str)
+    reservations_dao.new_reservation(tour_id, current_user.id, chosen_date_str, add_count, guest_names_str)
     
     flash("Booking successful!", "success")
     return redirect(url_for("auth.profile_participant"))
