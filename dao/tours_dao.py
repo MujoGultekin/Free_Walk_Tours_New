@@ -74,13 +74,15 @@ def search_tours(p_date_name=None, p_duration=None, p_lang=None):
     return tours
 
 def get_tour_by_id(p_tour_id):
-    """Retrieves full profile details of a single tour including guide details."""
+    """Retrieves full profile details of a single tour including guide details and report status."""
     query = """
         SELECT t.*, u.name as guide_name, u.surname as guide_surname,
-               GROUP_CONCAT(ts.day_of_week || ' (' || ts.start_time || ')', ', ') as schedule 
+               GROUP_CONCAT(ts.day_of_week || ' (' || ts.start_time || ')', ', ') as schedule,
+               CASE WHEN tr.id IS NOT NULL THEN 1 ELSE 0 END as is_reported
         FROM tours t 
         LEFT JOIN tour_schedule ts ON t.id = ts.tour_id 
         JOIN users u ON t.guide_id = u.id
+        LEFT JOIN tour_reports tr ON t.id = tr.tour_id
         WHERE t.id = ?
         GROUP BY t.id
     """

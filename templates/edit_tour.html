@@ -3,13 +3,12 @@
 {% block title %}Edit Tour{% endblock %}
 
 {% block content %}
-<!-- Edit tour form section, restricted to guide users -->
 <div class="col-12 d-flex justify-content-center py-4">
     <div class="card shadow border p-4" style="width: 100%; max-width: 600px;">
         <h2 class="mb-4 fw-bold text-primary">Edit Tour: {{ tour.title }}</h2>
         
-        <form method="POST">
-            <!-- Basic tour information fields -->
+        <!-- Form accepts file -->
+        <form method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label small fw-bold">Title</label>
                 <input type="text" name="title" id="title" class="form-control" value="{{ tour.title }}" required>
@@ -25,12 +24,13 @@
                 <input type="number" name="max_participants" id="max_participants" class="form-control" value="{{ tour.max_participants }}" required>
             </div>
             
+            <!-- Photo Uploading -->
             <div class="mb-3">
-                <label for="photos" class="form-label small fw-bold">Photo filename</label>
-                <input type="text" name="photos" id="photos" class="form-control" value="{{ tour.photos }}" required>
+                <label for="photos" class="form-label small fw-bold">Update Photos (Select new files)</label>
+                <input type="file" name="photos" id="photos" class="form-control" multiple accept="image/*">
+                <small class="text-muted">Current: {{ tour.photos }}</small>
             </div>
             
-            <!-- Duration and language input row -->
             <div class="row g-2 mb-3">
                 <div class="col-md-6">
                     <label for="duration" class="form-label small fw-bold">Duration (minutes)</label>
@@ -38,7 +38,14 @@
                 </div>
                 <div class="col-md-6">
                     <label for="language" class="form-label small fw-bold">Language</label>
-                    <input type="text" name="language" id="language" class="form-control" value="{{ tour.language }}" required>
+                    <select name="language" id="language" class="form-select" required>
+                        <option value="English" {% if tour.language == 'English' %}selected{% endif %}>English</option>
+                        <option value="Italian" {% if tour.language == 'Italian' %}selected{% endif %}>Italian</option>
+                        <option value="Spanish" {% if tour.language == 'Spanish' %}selected{% endif %}>Spanish</option>
+                        <option value="German" {% if tour.language == 'German' %}selected{% endif %}>German</option>
+                        <option value="French" {% if tour.language == 'French' %}selected{% endif %}>French</option>
+                        <option value="Chinese" {% if tour.language == 'Chinese' %}selected{% endif %}>Chinese</option>
+                    </select>
                 </div>
             </div>
             
